@@ -1,0 +1,23 @@
+### login
+
+POST localhost:9090/login
+Content-Type: application/json
+
+{
+  "username" : "user2",
+  "password" : "P@ssword1"
+}
+
+### register
+POST localhost:9090/register
+Content-Type: application/json
+
+{
+  "username": "User2",
+  "email": "some@emaill.com",
+  "password": "P@ssword1",
+  "confirmedPassword": "P@ssword1",
+  "age": 10,
+  "gender":"f"
+}
+

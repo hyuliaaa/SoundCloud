@@ -16,24 +16,24 @@ public class User {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "username")
+    @Column(unique = true)
     private String username;
 
-    @Column(name = "email")
+    @Column(unique = true)
     private String email;
 
-    @Column(name = "password")
+    @Column
     private String password;
 
-    @Column(name = "age")
+    @Column
     private int age;
 
-    @Column(name = "gender")
+    @Column
     private char gender;
 
-    @Column(name = "created_at")
+    @Column
     private LocalDateTime createdAt;
 
-    @Column(name = "profile_picture_url")
-    private String profilePictureURL;
+    @Column
+    private String profilePictureUrl;
 }
