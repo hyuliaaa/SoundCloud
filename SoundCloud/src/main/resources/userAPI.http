@@ -4,8 +4,8 @@ POST localhost:9090/login
 Content-Type: application/json
 
 {
-  "username" : "user2",
-  "password" : "P@ssword1"
+  "username" : "user33",
+  "password" : "newP@ss1"
 }
 
 ### register
@@ -13,11 +13,45 @@ POST localhost:9090/register
 Content-Type: application/json
 
 {
-  "username": "User2",
-  "email": "some@emaill.com",
-  "password": "P@ssword1",
-  "confirmedPassword": "P@ssword1",
+  "username": "User33",
+  "email": "some@emailll.com",
+  "password": "1P@ssword",
+  "confirmedPassword": "1P@ssword",
   "age": 10,
   "gender":"f"
 }
+
+### change password
+
+PUT localhost:9090/password
+Content-Type: application/json
+
+{
+  "oldPassword" : "1P@ssword",
+  "newPassword" : "newP@ss1",
+  "confirmedPassword": "newP@ss1"
+}
+
+### edit user
+
+PUT localhost:9090/edit
+Content-Type: application/json
+
+{
+"username": "User333",
+"email": null,
+"age": 11,
+"gender": null,
+"profilePictureUrl": null
+}
+
+### get user by id
+
+GET localhost:9090/13
+Content-Type: application/json
+
+### logout
+
+POST localhost:9090/logout
+Content-Type: application/json
 

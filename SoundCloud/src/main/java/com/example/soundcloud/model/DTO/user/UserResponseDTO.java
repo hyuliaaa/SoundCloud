@@ -1,11 +1,12 @@
-package com.example.soundcloud.model.DTO;
+package com.example.soundcloud.model.DTO.user;
+import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
+import com.example.soundcloud.model.POJO.Song;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
-@NoArgsConstructor
 public class UserResponseDTO {
 
     private long id;
@@ -15,4 +16,6 @@ public class UserResponseDTO {
     private char gender;
     private LocalDateTime createdAt;
     private String profilePictureURL;
+    private Set<SongWithoutUserDTO> uploadedSongs;
+
 }

@@ -1,12 +1,10 @@
-package com.example.soundcloud.model.DTO;
+package com.example.soundcloud.model.DTO.user;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 
 @Data
-@NoArgsConstructor
 public class UserRegisterRequestDTO {
 
     @NotBlank(message = "invalid username")

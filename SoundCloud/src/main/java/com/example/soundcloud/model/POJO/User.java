@@ -1,14 +1,17 @@
 package com.example.soundcloud.model.POJO;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class User {
 
@@ -36,4 +39,11 @@ public class User {
 
     @Column
     private String profilePictureUrl;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private Set<Song> uploadedSongs;
+
+    @ManyToMany (mappedBy = "likes")
+    private Set<Song> likedSongs;
+
 }

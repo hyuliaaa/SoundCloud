@@ -1,0 +1,21 @@
+### upload song
+
+POST localhost:9090/upload
+Content-Type: application/json
+
+{
+  "title": "title",
+  "songUrl": "djfj",
+  "coverPhotoUrl": null,
+  "isPublic": true
+}
+
+### find all by owner id, ordered by upload time
+
+GET localhost:9090/144/songs
+Content-Type: application/json
+
+### like a song
+
+POST localhost:9090/2/like
+Content-Type: application/json
