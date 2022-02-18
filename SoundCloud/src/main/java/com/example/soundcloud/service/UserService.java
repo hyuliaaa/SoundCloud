@@ -46,9 +46,7 @@ public class UserService {
         }
 
         String password = requestDTO.getPassword();
-        System.out.println(password);
         String confirmedPassword = requestDTO.getConfirmedPassword();
-        System.out.println(confirmedPassword);
 
         if(!password.equals(confirmedPassword)){
             throw new BadRequestException("Passwords do not match!");
@@ -64,10 +62,10 @@ public class UserService {
     public UserResponseDTO login(UserLoginRequestDTO requestDTO){
 
         User user = userRepository.findByUsername(requestDTO.getUsername()).
-                orElseThrow(() -> new BadRequestException("Wrong credentials"));
+                orElseThrow(() -> new BadRequestException("Wrong credentials!"));
         String password = requestDTO.getPassword();
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new BadRequestException("Wrong credentials");
+            throw new BadRequestException("Wrong credentials!");
         }
         return modelMapper.map(user, UserResponseDTO.class);
     }
@@ -76,8 +74,15 @@ public class UserService {
 
         User user = utils.getUserById(id);
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
-            throw new BadRequestException("Wrong password");
+            throw new BadRequestException("Wrong password!");
         }
+            
+        String password = dto.getNewPassword();
+        String confirmedPassword = dto.getConfirmedPassword();
+        if(!password.equals(confirmedPassword)){
+            throw new BadRequestException("Passwords do not match!");
+        }
+
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepository.save(user);
 

@@ -13,6 +13,16 @@ POST localhost:9090/login
 Content-Type: application/json
 
 {
+"username" : "nnnn",
+"password" : "2P@ssword"
+}
+
+
+###
+POST localhost:9090/login
+Content-Type: application/json
+
+{
   "username" : "nnn",
   "password" : "1P@ssword"
 }
@@ -49,9 +59,9 @@ PUT localhost:9090/password
 Content-Type: application/json
 
 {
-  "oldPassword" : "1P@ssword",
-  "newPassword" : null,
-  "confirmedPassword": "newP@ss1"
+  "oldPassword" : "2P@ssword",
+  "newPassword" : "3P@ssword",
+  "confirmedPassword": "3P@ssword"
 }
 
 ### edit user
