@@ -43,6 +43,9 @@ public class User {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<Song> uploadedSongs;
 
+    @OneToMany(mappedBy = "owner")
+    private Set<Playlist> playlists;
+
     @ManyToMany (mappedBy = "likes")
     private Set<Song> likedSongs;
 
