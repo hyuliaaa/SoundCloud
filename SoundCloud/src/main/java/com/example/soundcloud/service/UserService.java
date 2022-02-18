@@ -76,7 +76,7 @@ public class UserService {
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
             throw new BadRequestException("Wrong password!");
         }
-            
+
         String password = dto.getNewPassword();
         String confirmedPassword = dto.getConfirmedPassword();
         if(!password.equals(confirmedPassword)){
@@ -91,10 +91,11 @@ public class UserService {
 
     public UserResponseDTO edit(long id, UserEditRequestDTO dto){
         User user = utils.getUserById(id);
-        User userFromRequest = modelMapper.map(dto, User.class);
-        //TODO make it work
-        //BeanUtils.copyProperties(userFromRequest, user);
-        // save user
+        user.setEmail(dto.getEmail());
+        user.setAge(dto.getAge());
+        user.setGender(dto.getGender());
+        user.setProfilePictureUrl(dto.getProfilePictureURL());
+        userRepository.save(user);
         return modelMapper.map(user, UserResponseDTO.class);
     }
 

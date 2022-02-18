@@ -23,11 +23,11 @@ public class Utils {
     private CommentRepository commentRepository;
 
     public User getUserById(long id){
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("user not found"));
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found!"));
     }
 
     public Song getSongById(long id){
-        return songRepository.findById(id).orElseThrow(() -> new NotFoundException("song not found"));
+        return songRepository.findById(id).orElseThrow(() -> new NotFoundException("Song not found!"));
     }
 
     public Comment getCommentById(long id){

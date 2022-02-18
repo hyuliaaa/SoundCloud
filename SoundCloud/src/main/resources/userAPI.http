@@ -14,7 +14,7 @@ Content-Type: application/json
 
 {
 "username" : "nnnn",
-"password" : "2P@ssword"
+"password" : "3P@ssword"
 }
 
 
@@ -70,10 +70,10 @@ PUT localhost:9090/edit
 Content-Type: application/json
 
 {
-"username": "User333",
-"email": null,
-"age": 11,
-"gender": null,
+"username": "nnnn",
+"email": "nelina@gmail.com",
+"age": 14,
+"gender": "F",
 "profilePictureUrl": null
 }
 
