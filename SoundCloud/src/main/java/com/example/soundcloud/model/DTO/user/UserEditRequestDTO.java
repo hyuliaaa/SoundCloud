@@ -19,7 +19,6 @@ public class UserEditRequestDTO {
     @Positive(message = "invalid age")
     private int age;
 
-    @NotNull
     private char gender;
 
     private String profilePictureURL;

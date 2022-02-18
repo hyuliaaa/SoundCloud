@@ -1,0 +1,14 @@
+### post comment
+
+POST localhost:9090/comment
+Content-Type: application/json
+
+{
+  "songId": "3",
+  "content": "nice",
+  "parentCommentId": 9
+}
+
+### get all comments by song id
+
+### get all repties by comment id

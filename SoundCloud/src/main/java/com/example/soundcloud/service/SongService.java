@@ -7,10 +7,10 @@ import com.example.soundcloud.model.POJO.Song;
 import com.example.soundcloud.model.POJO.User;
 import com.example.soundcloud.model.repositories.SongRepository;
 import com.example.soundcloud.model.repositories.UserRepository;
+import com.example.soundcloud.util.Utils;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,10 +32,13 @@ public class SongService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private Utils utils;
+
     public SongWithoutUserDTO upload(long id, SongUploadDTO uploadDTO) {
 
         Song song = modelMapper.map(uploadDTO, Song.class);
-        song.setOwner(userRepository.findById(id).orElseThrow(() -> new NotFoundException("no such user")));
+        song.setOwner(utils.getUserById(id));
         song.setUploadedAt(LocalDateTime.now());
         //TODO validate song url
 
@@ -56,8 +59,8 @@ public class SongService {
     //TODO find by id or else throw -> in a separate method
     public int like(long songId, long userId) {
 
-        User user = (userRepository.findById(userId).orElseThrow(() -> new NotFoundException("no such user")));
-        Song song = (songRepository.findById(songId).orElseThrow(() -> new NotFoundException("no such song")));
+        User user = utils.getUserById(userId);
+        Song song = utils.getSongById(songId);
 
         song.getLikes().add(user);
         songRepository.save(song);

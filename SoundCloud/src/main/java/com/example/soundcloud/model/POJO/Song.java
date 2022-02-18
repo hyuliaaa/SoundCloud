@@ -47,5 +47,8 @@ public class Song {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> likes;
 
+    @OneToMany(mappedBy = "song", cascade = CascadeType.ALL)
+    private Set<Comment> comments;
+
     //TODO add description
 }

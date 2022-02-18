@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -58,6 +59,11 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable long id) {
         return ResponseEntity.ok(userService.getById(id));
+    }
+
+    @PostMapping("/profile_picture")
+    public String uploadProfileImage(@RequestParam(name = "picture") MultipartFile file, HttpSession session){
+        return userService.uploadPicture(file, (long) session.getAttribute(USER_ID));
     }
 
     @PostMapping("/logout")
