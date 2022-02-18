@@ -30,6 +30,19 @@ Content-Type: application/json
   "gender": null
 }
 
+###
+POST localhost:9090/register
+Content-Type: application/json
+
+{
+  "username": "nel",
+  "email": "nel@gmailll.com" ,
+  "password": "1P@ssword",
+  "confirmedPassword": "1P@sswoRrd",
+  "age": 14,
+  "gender": null
+}
+
 ### change password
 
 PUT localhost:9090/password

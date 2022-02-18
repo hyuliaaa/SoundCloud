@@ -1,4 +1,4 @@
-package com.example.soundcloud.model.POJO;
+package com.example.soundcloud.model.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

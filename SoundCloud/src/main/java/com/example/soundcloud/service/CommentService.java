@@ -2,9 +2,9 @@ package com.example.soundcloud.service;
 
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.model.DTO.comment.AddCommentRequestDTO;
-import com.example.soundcloud.model.POJO.Comment;
-import com.example.soundcloud.model.POJO.Song;
-import com.example.soundcloud.model.POJO.User;
+import com.example.soundcloud.model.entities.Comment;
+import com.example.soundcloud.model.entities.Song;
+import com.example.soundcloud.model.entities.User;
 import com.example.soundcloud.model.repositories.CommentRepository;
 import com.example.soundcloud.util.Utils;
 import lombok.Data;

@@ -1,9 +1,9 @@
 package com.example.soundcloud.util;
 
 import com.example.soundcloud.exceptions.NotFoundException;
-import com.example.soundcloud.model.POJO.Comment;
-import com.example.soundcloud.model.POJO.Song;
-import com.example.soundcloud.model.POJO.User;
+import com.example.soundcloud.model.entities.Comment;
+import com.example.soundcloud.model.entities.Song;
+import com.example.soundcloud.model.entities.User;
 import com.example.soundcloud.model.repositories.CommentRepository;
 import com.example.soundcloud.model.repositories.SongRepository;
 import com.example.soundcloud.model.repositories.UserRepository;

@@ -2,7 +2,7 @@ package com.example.soundcloud.service;
 
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.model.DTO.user.*;
-import com.example.soundcloud.model.POJO.User;
+import com.example.soundcloud.model.entities.User;
 import com.example.soundcloud.model.repositories.UserRepository;
 import com.example.soundcloud.util.Utils;
 import lombok.Data;
@@ -35,16 +35,28 @@ public class UserService {
     private Utils utils;
 
     public UserResponseDTO register(UserRegisterRequestDTO requestDTO){
-        if (userRepository.findByUsername(requestDTO.getUsername()).isPresent()){
-            throw new BadRequestException("username already exists");
+        String username = requestDTO.getUsername();
+        String email = requestDTO.getEmail();
+
+        if (userRepository.findByUsername(username).isPresent()){
+            throw new BadRequestException("Username already exists!");
         }
-        if (userRepository.findByEmail(requestDTO.getEmail()).isPresent()){
-            throw new BadRequestException("email already exists");
+        if (userRepository.findByEmail(email).isPresent()){
+            throw new BadRequestException("Email already exists!");
+        }
+
+        String password = requestDTO.getPassword();
+        System.out.println(password);
+        String confirmedPassword = requestDTO.getConfirmedPassword();
+        System.out.println(confirmedPassword);
+
+        if(!password.equals(confirmedPassword)){
+            throw new BadRequestException("Passwords do not match!");
         }
 
         User user = modelMapper.map(requestDTO, User.class);
         user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
-        user.setCreatedAt(LocalDateTime.now() );
+        user.setCreatedAt(LocalDateTime.now());
         userRepository.save(user);
         return modelMapper.map(user, UserResponseDTO.class);
     }
