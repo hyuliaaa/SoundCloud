@@ -1,9 +1,8 @@
-package com.example.soundcloud.controller;
+package com.example.soundcloud.interceptor;
 
 import com.example.soundcloud.exceptions.UnauthorizedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +28,7 @@ public class LoggedInterceptor implements HandlerInterceptor {
             || !(boolean) session.getAttribute(LOGGED)
             || !request.getRemoteAddr().equals(session.getAttribute(IP)))
         {
-            throw new UnauthorizedException("you are not logged in");
+            throw new UnauthorizedException("Please login to continue");
         }
 
         return true;

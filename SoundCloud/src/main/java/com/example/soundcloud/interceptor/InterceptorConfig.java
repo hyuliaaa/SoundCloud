@@ -1,4 +1,4 @@
-package com.example.soundcloud.controller;
+package com.example.soundcloud.interceptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

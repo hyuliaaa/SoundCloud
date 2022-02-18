@@ -3,21 +3,19 @@ package com.example.soundcloud.model.DTO.song;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Data
-public class SongUploadDTO {
+public class SongUploadRequestDTO {
 
-    @NotBlank
+    @NotBlank(message = "Title cannot be empty")
     private String title;
 
-    @NotBlank
+    @NotBlank(message = "Song URL cannot be empty")
     private String songUrl;
 
     private String coverPhotoUrl;
 
-    @NotNull
-    private boolean isPublic;
+    private Boolean isPublic;
 
     //TODO add description
 }

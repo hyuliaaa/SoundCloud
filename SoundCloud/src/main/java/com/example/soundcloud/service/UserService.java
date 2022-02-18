@@ -1,7 +1,6 @@
 package com.example.soundcloud.service;
 
 import com.example.soundcloud.exceptions.BadRequestException;
-import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.model.DTO.user.*;
 import com.example.soundcloud.model.POJO.User;
 import com.example.soundcloud.model.repositories.UserRepository;
@@ -53,19 +52,19 @@ public class UserService {
     public UserResponseDTO login(UserLoginRequestDTO requestDTO){
 
         User user = userRepository.findByUsername(requestDTO.getUsername()).
-                orElseThrow(() -> new BadRequestException("wrong credentials"));
+                orElseThrow(() -> new BadRequestException("Wrong credentials"));
         String password = requestDTO.getPassword();
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new BadRequestException("wrong credentials");
+            throw new BadRequestException("Wrong credentials");
         }
         return modelMapper.map(user, UserResponseDTO.class);
     }
 
-    public UserResponseDTO changePassword(long id, UserChangePasswordDTO dto){
+    public UserResponseDTO changePassword(long id, UserPasswordRequestDTO dto){
 
         User user = utils.getUserById(id);
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
-            throw new BadRequestException("wrong password");
+            throw new BadRequestException("Wrong password");
         }
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepository.save(user);

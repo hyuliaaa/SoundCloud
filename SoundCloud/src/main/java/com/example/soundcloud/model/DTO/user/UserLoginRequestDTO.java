@@ -7,10 +7,10 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class UserLoginRequestDTO {
 
-    @NotBlank(message = "username field cannot be empty")
+    @NotBlank(message = "Username cannot be empty")
     private String username;
 
-    @NotBlank(message = "password field cannot be empty")
+    @NotBlank(message = "Password cannot be empty")
     private String password;
 
 }

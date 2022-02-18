@@ -8,10 +8,10 @@ import javax.validation.constraints.NotNull;
 @Data
 public class AddCommentRequestDTO {
 
-    @NotNull(message = "song id is necessary")
-    private long songId;
+    @NotNull(message = "Song id is necessary")
+    private Long songId;
 
-    @NotBlank(message = "comment cannot be empty")
+    @NotBlank(message = "Comment cannot be empty")
     private String content;
 
     private Long parentCommentId;

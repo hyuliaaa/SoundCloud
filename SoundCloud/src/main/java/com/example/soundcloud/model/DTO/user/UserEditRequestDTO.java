@@ -10,15 +10,16 @@ import javax.validation.constraints.Positive;
 @Data
 public class UserEditRequestDTO {
 
-    @NotBlank(message = "invalid username")
+    @NotBlank(message = "Invalid username")
     private String username;
 
-    @Email(message = "invalid email address")
+    @Email(message = "Invalid email address")
     private String email;
 
-    @Positive(message = "invalid age")
+    @Positive(message = "Invalid age")
     private int age;
 
+    @NotNull(message = "Gender cannot be null")
     private char gender;
 
     private String profilePictureURL;

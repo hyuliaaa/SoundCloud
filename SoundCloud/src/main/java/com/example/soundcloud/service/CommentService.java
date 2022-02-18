@@ -35,6 +35,7 @@ public class CommentService {
                 .user(user).song(song)
                 .content(requestDTO.getContent())
                 .postedAt(LocalDateTime.now()).build();
+
         if (requestDTO.getParentCommentId() != null){
             Comment parentComment = utils.getCommentById(requestDTO.getParentCommentId());
             if (song != parentComment.getSong()){

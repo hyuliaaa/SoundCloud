@@ -4,8 +4,8 @@ POST localhost:9090/comment
 Content-Type: application/json
 
 {
-  "songId": "3",
-  "content": "nice",
+  "songId": 3,
+  "content": "s",
   "parentCommentId": 9
 }
 

@@ -1,6 +1,6 @@
 package com.example.soundcloud.controller;
 
-import com.example.soundcloud.model.DTO.song.SongUploadDTO;
+import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.service.SongService;
 import lombok.Data;
@@ -23,18 +23,18 @@ public class SongController {
     @Autowired
     private SongService songService;
 
-    @PostMapping("/upload")
-    ResponseEntity<SongWithoutUserDTO> upload(@Valid @RequestBody SongUploadDTO uploadDTO, HttpSession session){
+    @PostMapping("/upload_song")
+    ResponseEntity<SongWithoutUserDTO> upload(@Valid @RequestBody SongUploadRequestDTO uploadDTO, HttpSession session){
         long id = (long) session.getAttribute(USER_ID);
         return new ResponseEntity<>(songService.upload(id, uploadDTO), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}/songs")
-    ResponseEntity<Set<SongWithoutUserDTO>> getAllUploadedByUserId(@PathVariable long id){
-        return ResponseEntity.ok(songService.getAllUploaded(id));
+    @GetMapping("/users/{id}/songs")
+    ResponseEntity<Set<SongWithoutUserDTO>> getAllUploadedByUserId(@PathVariable long id, HttpSession session){
+        return ResponseEntity.ok(songService.getAllUploaded((long) session.getAttribute(USER_ID), id));
     }
 
-    @PostMapping("/{id}/like")
+    @PostMapping("/songs/{id}/like")
     ResponseEntity<Integer>like(@PathVariable long id, HttpSession session){
         return new ResponseEntity<>(songService.like(id, (long) session.getAttribute(USER_ID)), HttpStatus.CREATED);
     }

@@ -1,9 +1,7 @@
 package com.example.soundcloud.controller;
 
 import com.example.soundcloud.model.DTO.comment.AddCommentRequestDTO;
-import com.example.soundcloud.model.POJO.Comment;
 import com.example.soundcloud.service.CommentService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import java.util.Set;
 
 import static com.example.soundcloud.controller.UserController.USER_ID;
 

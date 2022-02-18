@@ -6,13 +6,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Data
-public class UserChangePasswordDTO {
+public class UserPasswordRequestDTO {
 
-    @NotBlank(message = "invalid password")
+    @NotBlank(message = "Password cannot be empty")
     private String oldPassword;
 
     @Pattern(regexp = "^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\\w\\d\\s:])([^\\s]){8,16}$",
-            message = "weak password")
+             message = "Password is too weak")
     private String newPassword;
 
     //TODO check if they match

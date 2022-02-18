@@ -1,7 +1,7 @@
 package com.example.soundcloud.service;
 
-import com.example.soundcloud.exceptions.NotFoundException;
-import com.example.soundcloud.model.DTO.song.SongUploadDTO;
+import com.example.soundcloud.exceptions.BadRequestException;
+import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.POJO.Song;
 import com.example.soundcloud.model.POJO.User;
@@ -35,7 +35,7 @@ public class SongService {
     @Autowired
     private Utils utils;
 
-    public SongWithoutUserDTO upload(long id, SongUploadDTO uploadDTO) {
+    public SongWithoutUserDTO upload(long id, SongUploadRequestDTO uploadDTO) {
 
         Song song = modelMapper.map(uploadDTO, Song.class);
         song.setOwner(utils.getUserById(id));
@@ -46,21 +46,27 @@ public class SongService {
         return modelMapper.map(song, SongWithoutUserDTO.class);
     }
 
-    public Set<SongWithoutUserDTO> getAllUploaded (long id){
+    public Set<SongWithoutUserDTO> getAllUploaded (long id, long otherUserId){
 
-        return userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("no such user"))
+        Set<SongWithoutUserDTO> songs = utils.getUserById(id)
                 .getUploadedSongs().stream()
                 .map((song) -> modelMapper.map(song, SongWithoutUserDTO.class))
-                .sorted(Comparator.comparing(SongWithoutUserDTO::getUploadedAt))
+                .collect(Collectors.toSet());
+
+        if (id != otherUserId)
+            songs = songs.stream().filter(SongWithoutUserDTO::isPublic).collect(Collectors.toSet());
+
+        return songs.stream().sorted(Comparator.comparing(SongWithoutUserDTO::getUploadedAt))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    //TODO find by id or else throw -> in a separate method
     public int like(long songId, long userId) {
 
         User user = utils.getUserById(userId);
         Song song = utils.getSongById(songId);
+
+        if (!song.isPublic() && song.getOwner() != user)
+            throw new BadRequestException("Song is private");
 
         song.getLikes().add(user);
         songRepository.save(song);

@@ -4,6 +4,7 @@ import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.exceptions.UnauthorizedException;
 import com.example.soundcloud.model.DTO.ErrorDTO;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -24,11 +27,25 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDTO, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler({BadRequestException.class, MethodArgumentNotValidException.class})
+    @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorDTO> handleBadRequest(Exception e){
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setStatus(HttpStatus.BAD_REQUEST);
         errorDTO.setMessage(e.getMessage());
+        errorDTO.setDateTime(LocalDateTime.now());
+        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorDTO> handleMethodArgumentNotValid(MethodArgumentNotValidException e){
+        ErrorDTO errorDTO = new ErrorDTO();
+        errorDTO.setStatus(HttpStatus.BAD_REQUEST);
+
+        List<String> errorMessages = e.getFieldErrors()
+                .stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
+
+        errorDTO.setMessage(String.join("; ", errorMessages));
         errorDTO.setDateTime(LocalDateTime.now());
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }

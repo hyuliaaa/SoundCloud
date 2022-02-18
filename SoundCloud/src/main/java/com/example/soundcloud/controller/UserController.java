@@ -43,20 +43,20 @@ public class UserController {
     }
 
     @PutMapping("/password")
-    public ResponseEntity<UserResponseDTO> editPassword(HttpSession session, @Valid @RequestBody UserChangePasswordDTO dto){
+    public ResponseEntity<UserResponseDTO> editPassword(@Valid @RequestBody UserPasswordRequestDTO dto, HttpSession session){
         Long id = (long) session.getAttribute(USER_ID);
         UserResponseDTO responseDTO = userService.changePassword(id, dto);
         return ResponseEntity.ok(responseDTO);
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<UserResponseDTO> editUser(HttpSession session, @Valid @RequestBody UserEditRequestDTO dto){
+    public ResponseEntity<UserResponseDTO> editUser(@Valid @RequestBody UserEditRequestDTO dto, HttpSession session){
         Long id = (long) session.getAttribute(USER_ID);
         UserResponseDTO responseDTO = userService.edit(id, dto);
         return ResponseEntity.ok(responseDTO);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable long id) {
         return ResponseEntity.ok(userService.getById(id));
     }
