@@ -59,9 +59,9 @@ PUT localhost:9090/password
 Content-Type: application/json
 
 {
-  "oldPassword" : "2P@ssword",
-  "newPassword" : "3P@ssword",
-  "confirmedPassword": "3P@ssword"
+  "oldPassword" : "3P@ssword",
+  "newPassword" : "4P@ssword",
+  "confirmedPassword": "4P@ssword"
 }
 
 ### edit user

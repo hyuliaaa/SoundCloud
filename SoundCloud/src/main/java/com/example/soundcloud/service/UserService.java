@@ -81,6 +81,10 @@ public class UserService {
             throw new BadRequestException("Wrong password!");
         }
 
+        if(passwordEncoder.matches(dto.getNewPassword(),user.getPassword())){
+            throw new BadRequestException("Your new password cannot be the same as your old one!");
+        }
+
         String password = dto.getNewPassword();
         String confirmedPassword = dto.getConfirmedPassword();
         if(!password.equals(confirmedPassword)){
