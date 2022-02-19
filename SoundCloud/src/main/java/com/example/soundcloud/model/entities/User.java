@@ -49,4 +49,8 @@ public class User {
     @ManyToMany (mappedBy = "likes")
     private Set<Song> likedSongs;
 
+    @ManyToMany()
+    @JoinTable // todo
+    private Set<Playlist> likedPlaylists;
+
 }

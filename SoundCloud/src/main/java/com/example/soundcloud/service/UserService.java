@@ -104,6 +104,11 @@ public class UserService {
         return modelMapper.map(user, UserResponseDTO.class);
     }
 
+    public UserResponseDTO getByUsername(String username){
+        User user = utils.getUserByUsername(username);
+        return modelMapper.map(user,UserResponseDTO.class);
+    }
+
     @SneakyThrows
     public String uploadPicture(MultipartFile file, long id) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());

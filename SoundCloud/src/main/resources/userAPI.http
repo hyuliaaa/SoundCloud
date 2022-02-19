@@ -82,6 +82,12 @@ Content-Type: application/json
 GET localhost:9090/users/13
 Content-Type: application/json
 
+
+### find user by username
+
+GET localhost:9090/find-by-username/Ivan
+Content-Type: application/json
+
 ### logout
 
 POST localhost:9090/logout

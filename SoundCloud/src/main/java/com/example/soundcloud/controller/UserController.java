@@ -61,6 +61,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getById(id));
     }
 
+    @GetMapping("/find-by-username/{username}")
+    public ResponseEntity<UserResponseDTO> getUserByUsername(@PathVariable String username){
+        return ResponseEntity.ok(userService.getByUsername(username));
+    }
+
     @PostMapping("/profile_picture")
     public String uploadProfileImage(@RequestParam(name = "picture") MultipartFile file, HttpSession session){
         return userService.uploadPicture(file, (long) session.getAttribute(USER_ID));

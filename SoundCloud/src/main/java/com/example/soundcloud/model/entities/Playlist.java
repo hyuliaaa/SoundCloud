@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity(name = "playlists")
 @Setter
@@ -34,6 +35,9 @@ public class Playlist {
 
     @Column
     private boolean isPublic;
+
+    @ManyToMany
+    Set<User> likes;
 
     //TODO: add description id
 
