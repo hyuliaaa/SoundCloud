@@ -20,13 +20,12 @@ public class UserRegisterRequestDTO {
     message = "Password is too weak")
     private String password;
 
-    //TODO: validate that passwords match
     private String confirmedPassword;
 
     @Min(value = 14, message = "Sorry, you don't meet SoundCloud's minimum age requirements")
     private int age;
 
-    @NotNull(message = "Gender cannot be null")
+    @NotNull(message = "Gender cannot be null!")
     private char gender;
 
 }

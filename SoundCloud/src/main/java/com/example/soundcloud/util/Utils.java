@@ -1,9 +1,9 @@
 package com.example.soundcloud.util;
 
 import com.example.soundcloud.exceptions.NotFoundException;
-import com.example.soundcloud.model.POJO.Comment;
-import com.example.soundcloud.model.POJO.Song;
-import com.example.soundcloud.model.POJO.User;
+import com.example.soundcloud.model.entities.Comment;
+import com.example.soundcloud.model.entities.Song;
+import com.example.soundcloud.model.entities.User;
 import com.example.soundcloud.model.repositories.CommentRepository;
 import com.example.soundcloud.model.repositories.SongRepository;
 import com.example.soundcloud.model.repositories.UserRepository;
@@ -23,11 +23,15 @@ public class Utils {
     private CommentRepository commentRepository;
 
     public User getUserById(long id){
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("user not found"));
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found!"));
+    }
+
+    public User getUserByUsername(String username){
+        return userRepository.findByUsername(username).orElseThrow(()->new NotFoundException("User not found!"));
     }
 
     public Song getSongById(long id){
-        return songRepository.findById(id).orElseThrow(() -> new NotFoundException("song not found"));
+        return songRepository.findById(id).orElseThrow(() -> new NotFoundException("Song not found!"));
     }
 
     public Comment getCommentById(long id){

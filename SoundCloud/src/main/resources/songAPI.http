@@ -15,7 +15,7 @@ Content-Type: application/json
 GET localhost:9090/users/13/songs
 Content-Type: application/json
 
-### like a song
 
+### like a song
 POST localhost:9090/songs/2/like
 Content-Type: application/json

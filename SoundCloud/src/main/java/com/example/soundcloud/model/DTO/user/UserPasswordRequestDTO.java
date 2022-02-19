@@ -15,6 +15,5 @@ public class UserPasswordRequestDTO {
              message = "Password is too weak")
     private String newPassword;
 
-    //TODO check if they match
     private String confirmedPassword;
 }

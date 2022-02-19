@@ -2,7 +2,7 @@ package com.example.soundcloud.service;
 
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.model.DTO.user.*;
-import com.example.soundcloud.model.POJO.User;
+import com.example.soundcloud.model.entities.User;
 import com.example.soundcloud.model.repositories.UserRepository;
 import com.example.soundcloud.util.Utils;
 import lombok.Data;
@@ -38,16 +38,26 @@ public class UserService {
     private Utils utils;
 
     public UserResponseDTO register(UserRegisterRequestDTO requestDTO){
-        if (userRepository.findByUsername(requestDTO.getUsername()).isPresent()){
-            throw new BadRequestException("username already exists");
+        String username = requestDTO.getUsername();
+        String email = requestDTO.getEmail();
+
+        if (userRepository.findByUsername(username).isPresent()){
+            throw new BadRequestException("Username already exists!");
         }
-        if (userRepository.findByEmail(requestDTO.getEmail()).isPresent()){
-            throw new BadRequestException("email already exists");
+        if (userRepository.findByEmail(email).isPresent()){
+            throw new BadRequestException("Email already exists!");
+        }
+
+        String password = requestDTO.getPassword();
+        String confirmedPassword = requestDTO.getConfirmedPassword();
+
+        if(!password.equals(confirmedPassword)){
+            throw new BadRequestException("Passwords do not match!");
         }
 
         User user = modelMapper.map(requestDTO, User.class);
         user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
-        user.setCreatedAt(LocalDateTime.now() );
+        user.setCreatedAt(LocalDateTime.now());
         userRepository.save(user);
         return modelMapper.map(user, UserResponseDTO.class);
     }
@@ -55,10 +65,10 @@ public class UserService {
     public UserResponseDTO login(UserLoginRequestDTO requestDTO){
 
         User user = userRepository.findByUsername(requestDTO.getUsername()).
-                orElseThrow(() -> new BadRequestException("Wrong credentials"));
+                orElseThrow(() -> new BadRequestException("Wrong credentials!"));
         String password = requestDTO.getPassword();
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new BadRequestException("Wrong credentials");
+            throw new BadRequestException("Wrong credentials!");
         }
         return modelMapper.map(user, UserResponseDTO.class);
     }
@@ -67,8 +77,15 @@ public class UserService {
 
         User user = utils.getUserById(id);
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
-            throw new BadRequestException("Wrong password");
+            throw new BadRequestException("Wrong password!");
         }
+
+        String password = dto.getNewPassword();
+        String confirmedPassword = dto.getConfirmedPassword();
+        if(!password.equals(confirmedPassword)){
+            throw new BadRequestException("Passwords do not match!");
+        }
+
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepository.save(user);
 
@@ -77,16 +94,22 @@ public class UserService {
 
     public UserResponseDTO edit(long id, UserEditRequestDTO dto){
         User user = utils.getUserById(id);
-        User userFromRequest = modelMapper.map(dto, User.class);
-        //TODO make it work
-        //BeanUtils.copyProperties(userFromRequest, user);
-        // save user
+        user.setEmail(dto.getEmail());
+        user.setAge(dto.getAge());
+        user.setGender(dto.getGender());
+        user.setProfilePictureUrl(dto.getProfilePictureURL());
+        userRepository.save(user);
         return modelMapper.map(user, UserResponseDTO.class);
     }
 
     public UserResponseDTO getById(long id) {
         User user = utils.getUserById(id);
         return modelMapper.map(user, UserResponseDTO.class);
+    }
+
+    public UserResponseDTO getByUsername(String username){
+        User user = utils.getUserByUsername(username);
+        return modelMapper.map(user,UserResponseDTO.class);
     }
 
     @SneakyThrows

@@ -13,6 +13,16 @@ POST localhost:9090/login
 Content-Type: application/json
 
 {
+"username" : "nnnn",
+"password" : "3P@ssword"
+}
+
+
+###
+POST localhost:9090/login
+Content-Type: application/json
+
+{
   "username" : "nnn",
   "password" : "1P@ssword"
 }
@@ -30,15 +40,28 @@ Content-Type: application/json
   "gender": null
 }
 
+###
+POST localhost:9090/register
+Content-Type: application/json
+
+{
+  "username": "nel",
+  "email": "nel@gmailll.com" ,
+  "password": "1P@ssword",
+  "confirmedPassword": "1P@sswoRrd",
+  "age": 14,
+  "gender": null
+}
+
 ### change password
 
 PUT localhost:9090/password
 Content-Type: application/json
 
 {
-  "oldPassword" : "1P@ssword",
-  "newPassword" : null,
-  "confirmedPassword": "newP@ss1"
+  "oldPassword" : "2P@ssword",
+  "newPassword" : "3P@ssword",
+  "confirmedPassword": "3P@ssword"
 }
 
 ### edit user
@@ -47,10 +70,10 @@ PUT localhost:9090/edit
 Content-Type: application/json
 
 {
-"username": "User333",
-"email": null,
-"age": 11,
-"gender": null,
+"username": "nnnn",
+"email": "nelina@gmail.com",
+"age": 14,
+"gender": "F",
 "profilePictureUrl": null
 }
 
@@ -72,6 +95,10 @@ Content-Type: application/json
 ### get followers
 
 GET localhost:9090/users/13/followers
+
+### find user by username
+
+GET localhost:9090/find-by-username/Ivan
 Content-Type: application/json
 
 ### logout
