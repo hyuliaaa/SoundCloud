@@ -31,7 +31,7 @@ public class Playlist {
     private LocalDateTime lastModified;
 
     @Column
-    private String coverPhotUrl;
+    private String coverPhotoUrl;
 
     @Column
     private boolean isPublic;

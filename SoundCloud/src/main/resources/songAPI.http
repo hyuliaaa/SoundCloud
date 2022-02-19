@@ -7,7 +7,10 @@ Content-Type: application/json
   "title": "ghost",
   "songUrl": "djfj",
   "coverPhotoUrl": null,
-  "isPublic": true
+  "isPublic": true,
+  "description": {
+    "content": "hi #tag #new"
+  }
 }
 
 ### find all by owner id, ordered by upload time

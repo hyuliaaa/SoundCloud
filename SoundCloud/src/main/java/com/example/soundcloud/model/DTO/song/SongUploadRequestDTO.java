@@ -1,5 +1,7 @@
 package com.example.soundcloud.model.DTO.song;
 
+import com.example.soundcloud.model.DTO.description.DescriptionDTO;
+import com.example.soundcloud.model.entities.Description;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -17,5 +19,5 @@ public class SongUploadRequestDTO {
 
     private Boolean isPublic;
 
-    //TODO add description
+    private DescriptionDTO description;
 }

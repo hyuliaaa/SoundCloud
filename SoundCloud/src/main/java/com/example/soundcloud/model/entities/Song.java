@@ -3,6 +3,7 @@ package com.example.soundcloud.model.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.engine.internal.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -50,5 +51,8 @@ public class Song {
     @OneToMany(mappedBy = "song", cascade = CascadeType.ALL)
     private Set<Comment> comments;
 
-    //TODO add description
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "description_id", referencedColumnName = "id")
+    private Description description;
+
 }

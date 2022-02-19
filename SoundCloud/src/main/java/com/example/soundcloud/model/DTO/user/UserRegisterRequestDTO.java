@@ -26,6 +26,6 @@ public class UserRegisterRequestDTO {
     private int age;
 
     @NotNull(message = "Gender cannot be null!")
-    private char gender;
+    private Character gender;
 
 }
