@@ -49,7 +49,6 @@ public class User {
     @ManyToMany (mappedBy = "likes")
     private Set<Song> likedSongs;
 
-
     @ManyToMany
     @JoinTable(
             name = "users_follow_users",
@@ -68,6 +67,5 @@ public class User {
             inverseJoinColumns = @JoinColumn(name="playlist_id")
     )
     private Set<Playlist> likedPlaylists;
-
 
 }

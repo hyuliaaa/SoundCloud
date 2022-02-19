@@ -6,9 +6,34 @@ Content-Type: application/json
 {
   "songId": 3,
   "content": "s",
-  "parentCommentId": 9
+  "parentCommentId": null
 }
 
 ### get all comments by song id
 
-### get all repties by comment id
+GET localhost:9090/songs/2/comments
+Content-Type: application/json
+
+### like comment
+
+POST localhost:9090/comments/1/like
+Content-Type: application/json
+
+### unlike comment
+
+DELETE localhost:9090/comments/1/like
+Content-Type: application/json
+
+### edit comment
+
+PUT localhost:9090/comments/12/edit
+Content-Type: application/json
+
+{
+  "content" : "abv"
+}
+
+### delete comment
+
+DELETE localhost:9090/comments/1
+Content-Type: application/json

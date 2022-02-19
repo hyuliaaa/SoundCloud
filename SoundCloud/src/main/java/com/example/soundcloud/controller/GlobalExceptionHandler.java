@@ -1,6 +1,7 @@
 package com.example.soundcloud.controller;
 
 import com.example.soundcloud.exceptions.BadRequestException;
+import com.example.soundcloud.exceptions.ForbiddenException;
 import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.exceptions.UnauthorizedException;
 import com.example.soundcloud.model.DTO.ErrorDTO;
@@ -57,6 +58,15 @@ public class GlobalExceptionHandler {
         errorDTO.setMessage(e.getMessage());
         errorDTO.setDateTime(LocalDateTime.now());
         return new ResponseEntity<>(errorDTO, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorDTO> handleForbidden(Exception e){
+        ErrorDTO errorDTO = new ErrorDTO();
+        errorDTO.setStatus(HttpStatus.FORBIDDEN);
+        errorDTO.setMessage(e.getMessage());
+        errorDTO.setDateTime(LocalDateTime.now());
+        return new ResponseEntity<>(errorDTO, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(Exception.class)
