@@ -37,8 +37,8 @@ public class Playlist {
     private boolean isPublic;
 
 
-    //todo
-    @ManyToMany
+
+    @ManyToMany(mappedBy = "likedPlaylists")
     Set<User> likes;
 
     //TODO: add description id

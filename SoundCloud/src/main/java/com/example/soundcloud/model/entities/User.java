@@ -54,14 +54,19 @@ public class User {
     @JoinTable(
             name = "users_follow_users",
             joinColumns = @JoinColumn(name = "follower_id"),
-            inverseJoinColumns = @JoinColumn(name = "followed_id"))
+            inverseJoinColumns = @JoinColumn(name = "followed_id")
+    )
     private Set<User> following;
 
     @ManyToMany (mappedBy = "following")
     private Set<User> followers;
 
     @ManyToMany()
-    @JoinTable // todo
+    @JoinTable(
+            name = "users_like_playlists",
+            joinColumns = @JoinColumn(name="user_id"),
+            inverseJoinColumns = @JoinColumn(name="playlist_id")
+    )
     private Set<Playlist> likedPlaylists;
 
 
