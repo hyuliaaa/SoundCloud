@@ -82,6 +82,19 @@ Content-Type: application/json
 GET localhost:9090/users/13
 Content-Type: application/json
 
+### follow user
+
+POST localhost:9090/users/2/follow
+Content-Type: application/json
+
+### get following
+
+GET localhost:9090/users/13/following
+Content-Type: application/json
+
+### get followers
+
+GET localhost:9090/users/13/followers
 
 ### find user by username
 
