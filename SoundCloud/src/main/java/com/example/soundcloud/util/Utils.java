@@ -37,4 +37,8 @@ public class Utils {
     public Comment getCommentById(long id){
         return commentRepository.findById(id).orElseThrow(() -> new NotFoundException("Comment not found!"));
     }
+
+    public Song getSongByTitle(String title){
+        return songRepository.findByTitle(title).orElseThrow(() -> new NotFoundException("Song not found!"));
+    }
 }

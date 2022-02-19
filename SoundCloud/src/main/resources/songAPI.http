@@ -4,7 +4,7 @@ POST localhost:9090/upload_song
 Content-Type: application/json
 
 {
-  "title": "title",
+  "title": "ghost",
   "songUrl": "djfj",
   "coverPhotoUrl": null,
   "isPublic": true
@@ -24,3 +24,6 @@ Content-Type: application/json
 DELETE localhost:9090/songs/2/unlike
 Content-Type: application/json
 
+### get song by name
+GET localhost:9090/songs/ghost
+Content-Type: application/json

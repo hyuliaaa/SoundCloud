@@ -3,6 +3,7 @@ package com.example.soundcloud.service;
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
+import com.example.soundcloud.model.DTO.user.UserResponseDTO;
 import com.example.soundcloud.model.entities.Song;
 import com.example.soundcloud.model.entities.User;
 import com.example.soundcloud.model.repositories.SongRepository;
@@ -95,4 +96,13 @@ public class SongService {
         return song.getLikes().size();
     }
 
+    public UserResponseDTO getByUsername(String username){
+        User user = utils.getUserByUsername(username);
+        return modelMapper.map(user,UserResponseDTO.class);
+    }
+
+    public SongWithoutUserDTO getByTitle(String title) {
+        Song song = utils.getSongByTitle(title);
+        return modelMapper.map(song,SongWithoutUserDTO.class);
+    }
 }

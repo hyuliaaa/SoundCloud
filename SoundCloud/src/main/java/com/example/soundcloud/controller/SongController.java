@@ -2,6 +2,7 @@ package com.example.soundcloud.controller;
 
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
+import com.example.soundcloud.model.DTO.user.UserResponseDTO;
 import com.example.soundcloud.service.SongService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,4 +45,8 @@ public class SongController {
         return new ResponseEntity<>(songService.unlike(id, (long) session.getAttribute(USER_ID)), HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/songs/{title}")
+    public ResponseEntity<SongWithoutUserDTO> getSongByTitle(@PathVariable String title){
+        return ResponseEntity.ok(songService.getByTitle(title));
+    }
 }
