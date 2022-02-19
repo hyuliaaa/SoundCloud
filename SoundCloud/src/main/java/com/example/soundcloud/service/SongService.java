@@ -68,8 +68,30 @@ public class SongService {
         if (!song.isPublic() && song.getOwner() != user)
             throw new BadRequestException("Song is private");
 
+        if(user.getLikedSongs().contains(song)){
+            throw new BadRequestException("User already liked this song!");
+        }
+
         song.getLikes().add(user);
         songRepository.save(song);
+        return song.getLikes().size();
+    }
+
+
+    public int unlike(long songId, long userId) {
+
+        User user = utils.getUserById(userId);
+        Song song = utils.getSongById(songId);
+
+        if (!song.isPublic() && song.getOwner() != user)
+            throw new BadRequestException("Song is private");
+
+        if(!user.getLikedSongs().contains(song)){
+            throw new BadRequestException("User haven't liked this song!");
+        }
+
+        song.getLikes().remove(user);
+        songRepository.delete(song);
         return song.getLikes().size();
     }
 

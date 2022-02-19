@@ -19,3 +19,7 @@ Content-Type: application/json
 ### like a song
 POST localhost:9090/songs/2/like
 Content-Type: application/json
+
+### unlike a song
+DELETE localhost:9090/songs/2/unlike
+Content-Type: application/json

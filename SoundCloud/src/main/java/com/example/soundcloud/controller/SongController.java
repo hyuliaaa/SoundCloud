@@ -39,4 +39,9 @@ public class SongController {
         return new ResponseEntity<>(songService.like(id, (long) session.getAttribute(USER_ID)), HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/songs/{id}/unlike")
+    ResponseEntity<Integer>unlike(@PathVariable long id, HttpSession session){
+        return new ResponseEntity<>(songService.unlike(id, (long) session.getAttribute(USER_ID)), HttpStatus.NO_CONTENT);
+    }
+
 }
