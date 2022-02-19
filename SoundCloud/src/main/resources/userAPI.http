@@ -93,3 +93,6 @@ Content-Type: application/json
 POST localhost:9090/logout
 Content-Type: application/json
 
+### delete user by id
+DELETE localhost:9090/delete-user/1
+Content-Type: application/json

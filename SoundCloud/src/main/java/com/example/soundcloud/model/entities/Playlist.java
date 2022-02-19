@@ -36,6 +36,8 @@ public class Playlist {
     @Column
     private boolean isPublic;
 
+
+    //todo
     @ManyToMany
     Set<User> likes;
 

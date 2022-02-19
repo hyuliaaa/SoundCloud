@@ -1,6 +1,7 @@
 package com.example.soundcloud.controller;
 
 import com.example.soundcloud.model.DTO.user.*;
+import com.example.soundcloud.model.entities.User;
 import com.example.soundcloud.service.UserService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,13 @@ public class UserController {
     public String uploadProfileImage(@RequestParam(name = "picture") MultipartFile file, HttpSession session){
         return userService.uploadPicture(file, (long) session.getAttribute(USER_ID));
     }
+
+//    @DeleteMapping("delete-user/{id}")
+//    public void deleteUser(@PathVariable long id){
+//        UserResponseDTO user = userService.getById(id);
+//        userService.deleteUser(user);
+//        ResponseEntity.status(204);
+//    }
 
     @PostMapping("/logout")
     public void logout(HttpSession session){

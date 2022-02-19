@@ -17,6 +17,7 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @Data
@@ -119,4 +120,9 @@ public class UserService {
         userRepository.save(user);
         return name;
     }
+
+//    public void deleteUser(UserResponseDTO user) {
+//        userRepository.delete(modelMapper.map(user,User.class));
+//    }
+
 }

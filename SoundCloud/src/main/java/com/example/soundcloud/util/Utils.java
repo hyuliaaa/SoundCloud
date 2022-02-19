@@ -35,6 +35,6 @@ public class Utils {
     }
 
     public Comment getCommentById(long id){
-        return commentRepository.findById(id).orElseThrow(() -> new NotFoundException("comment not found"));
+        return commentRepository.findById(id).orElseThrow(() -> new NotFoundException("Comment not found!"));
     }
 }
