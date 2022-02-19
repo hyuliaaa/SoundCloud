@@ -1,8 +1,6 @@
 package com.example.soundcloud.model.DTO.user;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class UserResponseDTO {
 
@@ -11,7 +9,6 @@ public class UserResponseDTO {
     private String email;
     private int age;
     private char gender;
-    private LocalDateTime createdAt;
     private String profilePictureURL;
 
 }

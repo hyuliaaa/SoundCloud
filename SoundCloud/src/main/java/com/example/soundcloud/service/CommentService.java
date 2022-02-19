@@ -1,7 +1,10 @@
 package com.example.soundcloud.service;
 
 import com.example.soundcloud.exceptions.BadRequestException;
-import com.example.soundcloud.model.DTO.comment.AddCommentRequestDTO;
+import com.example.soundcloud.exceptions.ForbiddenException;
+import com.example.soundcloud.model.DTO.comment.CommentAddRequestDTO;
+import com.example.soundcloud.model.DTO.comment.CommentEditRequestDTO;
+import com.example.soundcloud.model.DTO.comment.CommentResponseDTO;
 import com.example.soundcloud.model.entities.Comment;
 import com.example.soundcloud.model.entities.Song;
 import com.example.soundcloud.model.entities.User;
@@ -13,6 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Data
@@ -27,7 +34,7 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public void addComment(long userId, AddCommentRequestDTO requestDTO) {
+    public void addComment(long userId, CommentAddRequestDTO requestDTO) {
         User user = utils.getUserById(userId);
         Song song = getUtils().getSongById(requestDTO.getSongId());
 
@@ -44,5 +51,56 @@ public class CommentService {
             comment.setParentComment(parentComment);
         }
         commentRepository.save(comment);
+    }
+
+    public Set<CommentResponseDTO> getAll(long id) {
+        Song song = utils.getSongById(id);
+        return song.getComments().stream()
+                .map(comment ->modelMapper.map(comment, CommentResponseDTO.class))
+                .sorted(Comparator.comparing(CommentResponseDTO::getPostedAt))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    public void like(long userId, long commentId) {
+        User user = utils.getUserById(userId);
+        Comment comment =utils.getCommentById(commentId);
+        if (comment.getLikes().contains(user)){
+            throw new BadRequestException("You have already liked this comment");
+        }
+        comment.getLikes().add(user);
+        commentRepository.save(comment);
+    }
+
+    public void unlike(long userId, long commentId) {
+        User user = utils.getUserById(userId);
+        Comment comment =utils.getCommentById(commentId);
+        if (!comment.getLikes().contains(user)){
+            throw new BadRequestException("You haven't liked this comment");
+        }
+        comment.getLikes().remove(user);
+        commentRepository.save(comment);
+    }
+
+    public CommentResponseDTO edit(long userId, long commentId, CommentEditRequestDTO requestDTO) {
+        User user = utils.getUserById(userId);
+        Comment comment = utils.getCommentById(commentId);
+        if (!comment.getUser().equals(user)){
+            throw new ForbiddenException("You cannot edit this comment");
+        }
+
+        comment.setContent(requestDTO.getContent());
+        commentRepository.save(comment);
+        return modelMapper.map(comment, CommentResponseDTO.class);
+    }
+
+    public void delete(long userId, long commentId) {
+        User user = utils.getUserById(userId);
+        Comment comment = utils.getCommentById(commentId);
+
+        if (!comment.getUser().equals(user)){
+            throw new ForbiddenException("You cannot delete this comment");
+        }
+
+        commentRepository.delete(comment);
     }
 }

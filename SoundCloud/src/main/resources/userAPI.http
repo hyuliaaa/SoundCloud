@@ -13,7 +13,7 @@ POST localhost:9090/login
 Content-Type: application/json
 
 {
-"username" : "nnnn",
+"username" : "nnn",
 "password" : "3P@ssword"
 }
 

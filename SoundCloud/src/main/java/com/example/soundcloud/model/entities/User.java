@@ -49,7 +49,6 @@ public class User {
     @ManyToMany (mappedBy = "likes")
     private Set<Song> likedSongs;
 
-<<<<<<< HEAD:SoundCloud/src/main/java/com/example/soundcloud/model/POJO/User.java
     @ManyToMany
     @JoinTable(
             name = "users_follow_users",
@@ -59,10 +58,9 @@ public class User {
 
     @ManyToMany (mappedBy = "following")
     private Set<User> followers;
-=======
+
     @ManyToMany()
     @JoinTable // todo
     private Set<Playlist> likedPlaylists;
->>>>>>> 4804ecdeeee26d3f19f1715376ac4b7957cb4049:SoundCloud/src/main/java/com/example/soundcloud/model/entities/User.java
 
 }
