@@ -72,6 +72,14 @@ public class UserController {
         return userService.uploadPicture(file, (long) session.getAttribute(USER_ID));
     }
 
+
+//    @DeleteMapping("delete-user/{id}")
+//    public void deleteUser(@PathVariable long id){
+//        UserResponseDTO user = userService.getById(id);
+//        userService.deleteUser(user);
+//        ResponseEntity.status(204);
+//    }
+
     @PostMapping("/users/{id}/follow")
     public ResponseEntity<String> followUser(@PathVariable long id, HttpSession session) {
         userService.follow((long) session.getAttribute(USER_ID), id);
@@ -87,7 +95,6 @@ public class UserController {
     public ResponseEntity<Set<UserResponseDTO>> getFollowers(@PathVariable long id) {
         return ResponseEntity.ok(userService.getFollowers(id));
     }
-
     @PostMapping("/logout")
     public void logout(HttpSession session){
         session.invalidate();

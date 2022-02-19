@@ -13,12 +13,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 
 @Service
 @Data
@@ -79,6 +80,10 @@ public class UserService {
             throw new BadRequestException("Wrong password!");
         }
 
+        if(passwordEncoder.matches(dto.getNewPassword(),user.getPassword())){
+            throw new BadRequestException("Your new password cannot be the same as your old one!");
+        }
+
         String password = dto.getNewPassword();
         String confirmedPassword = dto.getConfirmedPassword();
         if(!password.equals(confirmedPassword)){
@@ -123,6 +128,12 @@ public class UserService {
         return name;
     }
 
+
+//    public void deleteUser(UserResponseDTO user) {
+//        userRepository.delete(modelMapper.map(user,User.class));
+//    }
+
+
     public void follow(long id, long otherUser) {
         if (id == otherUser){
             throw new BadRequestException("You cannot follow yourself");
@@ -145,4 +156,5 @@ public class UserService {
         User user = utils.getUserById(id);
         return user.getFollowers().stream().map((user1 -> modelMapper.map(user1, UserResponseDTO.class))).collect(Collectors.toSet());
     }
+
 }
