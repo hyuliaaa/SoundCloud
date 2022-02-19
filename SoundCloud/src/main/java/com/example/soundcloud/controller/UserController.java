@@ -1,6 +1,7 @@
 package com.example.soundcloud.controller;
 
 import com.example.soundcloud.model.DTO.user.*;
+import com.example.soundcloud.model.POJO.User;
 import com.example.soundcloud.service.UserService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Set;
 
 @RestController
 @Data
@@ -64,6 +66,22 @@ public class UserController {
     @PostMapping("/profile_picture")
     public String uploadProfileImage(@RequestParam(name = "picture") MultipartFile file, HttpSession session){
         return userService.uploadPicture(file, (long) session.getAttribute(USER_ID));
+    }
+
+    @PostMapping("/users/{id}/follow")
+    public ResponseEntity<String> followUser(@PathVariable long id, HttpSession session) {
+        userService.follow((long) session.getAttribute(USER_ID), id);
+        return ResponseEntity.ok("Followed successfully");
+    }
+
+    @GetMapping("/users/{id}/following")
+    public ResponseEntity<Set<UserResponseDTO>> getFollowing(@PathVariable long id) {
+        return ResponseEntity.ok(userService.getFollowing(id));
+    }
+
+    @GetMapping("/users/{id}/followers")
+    public ResponseEntity<Set<UserResponseDTO>> getFollowers(@PathVariable long id) {
+        return ResponseEntity.ok(userService.getFollowers(id));
     }
 
     @PostMapping("/logout")
