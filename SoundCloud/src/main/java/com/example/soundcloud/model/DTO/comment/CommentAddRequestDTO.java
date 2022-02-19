@@ -6,12 +6,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class AddCommentRequestDTO {
+public class CommentAddRequestDTO {
 
     @NotNull(message = "Song id is necessary")
     private Long songId;
 
-    @NotBlank(message = "Comment cannot be empty")
+    @NotBlank(message = "You cannot leave an empty comment")
     private String content;
 
     private Long parentCommentId;

@@ -39,4 +39,11 @@ public class Comment {
     @OneToMany(mappedBy = "parentComment")
     private Set<Comment> replies;
 
+    @ManyToMany
+    @JoinTable(
+            name = "users_like_comments",
+            joinColumns = @JoinColumn(name = "comment_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> likes;
+
 }

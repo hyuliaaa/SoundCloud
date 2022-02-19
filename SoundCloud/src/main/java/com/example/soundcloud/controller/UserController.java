@@ -1,7 +1,6 @@
 package com.example.soundcloud.controller;
 
 import com.example.soundcloud.model.DTO.user.*;
-import com.example.soundcloud.model.entities.User;
 import com.example.soundcloud.service.UserService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
