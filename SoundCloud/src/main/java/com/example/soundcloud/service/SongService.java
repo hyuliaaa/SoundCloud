@@ -96,11 +96,6 @@ public class SongService {
         return song.getLikes().size();
     }
 
-    public UserResponseDTO getByUsername(String username){
-        User user = utils.getUserByUsername(username);
-        return modelMapper.map(user,UserResponseDTO.class);
-    }
-
     public SongWithoutUserDTO getByTitle(String title) {
         Song song = utils.getSongByTitle(title);
         return modelMapper.map(song,SongWithoutUserDTO.class);
