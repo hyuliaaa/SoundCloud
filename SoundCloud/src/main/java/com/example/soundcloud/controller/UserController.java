@@ -67,7 +67,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getByUsername(username));
     }
 
-    @PostMapping("/profile_picture")
+    @PostMapping("/users/upload")
     public String uploadProfileImage(@RequestParam(name = "picture") MultipartFile file, HttpSession session){
         return userService.uploadPicture(file, (long) session.getAttribute(USER_ID));
     }
