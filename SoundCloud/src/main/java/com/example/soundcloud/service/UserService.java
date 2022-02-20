@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -118,13 +119,13 @@ public class UserService {
     @SneakyThrows
     public String uploadPicture(MultipartFile file, long id) {
         User user = userRepository.getById(id);
-
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         String name = System.nanoTime() + "." + extension;
-        Files.copy(file.getInputStream(), new File("profile_pictures" + File.separator + name).toPath());
+        File f = new File("profile_pictures" + File.separator + name);
+        Files.copy(file.getInputStream(), Path.of(f.toURI()));
         user.setProfilePictureUrl(name);
         userRepository.save(user);
-        return name;
+        return f.getName();
     }
 
 

@@ -12,6 +12,17 @@ Content-Type: application/json
     "content": "hi #try #neww"
   }
 }
+###
+POST localhost:9090/upload_song
+Content-Type: application/json
+
+{
+"title": "miss",
+"songUrl": "dfg",
+"coverPhotoUrl": null,
+"isPublic": true,
+"description": null
+}
 
 ### find all by owner id, ordered by upload time
 

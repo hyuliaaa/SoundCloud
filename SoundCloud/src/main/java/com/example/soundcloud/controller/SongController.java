@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -49,4 +50,10 @@ public class SongController {
     public ResponseEntity<SongWithoutUserDTO> getSongByTitle(@PathVariable String title){
         return ResponseEntity.ok(songService.getByTitle(title));
     }
+
+    @PostMapping("/songs/{song_id}/upload-song-image")
+    public String uploadSongImage(@PathVariable long song_id,@RequestParam(name = "picture") MultipartFile file, HttpSession session){
+        return songService.uploadSongPicture(song_id,file, (long) session.getAttribute(USER_ID));
+    }
+    //edit song
 }

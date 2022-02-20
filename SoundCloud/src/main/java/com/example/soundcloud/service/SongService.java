@@ -14,11 +14,17 @@ import com.example.soundcloud.model.repositories.TagRepository;
 import com.example.soundcloud.model.repositories.UserRepository;
 import com.example.soundcloud.util.Utils;
 import lombok.Data;
+import lombok.SneakyThrows;
+import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -141,5 +147,20 @@ public class SongService {
     public SongWithoutUserDTO getByTitle(String title) {
         Song song = utils.getSongByTitle(title);
         return modelMapper.map(song,SongWithoutUserDTO.class);
+    }
+
+    @SneakyThrows
+    public String uploadSongPicture(long song_id,MultipartFile file, long id) {
+        Song song = songRepository.getById(song_id);
+        if(song.getOwner().getId() != id){
+            throw new BadRequestException("Not allowed to modify songs of other users!");
+        }
+        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+        String name = System.nanoTime() + "." + extension;
+        File f = new File("song_pictures" + File.separator + name);
+        Files.copy(file.getInputStream(), Path.of(f.toURI()));
+        song.setCoverPhotoUrl(name);
+        songRepository.save(song);
+        return f.getName();
     }
 }
