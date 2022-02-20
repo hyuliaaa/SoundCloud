@@ -14,5 +14,5 @@ public class SongWithLikesDTO {
     private String songUrl;
     private String coverPhotoUrl;
     private boolean isPublic;
-    private int numberOflikes;
+    private int numberOfLikes;
 }

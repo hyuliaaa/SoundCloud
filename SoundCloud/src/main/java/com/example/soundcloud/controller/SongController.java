@@ -1,5 +1,6 @@
 package com.example.soundcloud.controller;
 
+import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
@@ -53,8 +54,12 @@ public class SongController {
     }
 
     @PostMapping("/songs/{song_id}/upload-song-image")
-    public String uploadSongImage(@PathVariable long song_id,@RequestParam(name = "picture") MultipartFile file, HttpSession session){
-        return songService.uploadSongPicture(song_id,file, (long) session.getAttribute(USER_ID));
+    public String uploadSongImage(@PathVariable("song_id") long songId, @RequestParam(name = "picture") MultipartFile file, HttpSession session){
+        return songService.uploadSongPicture(songId,file, (long) session.getAttribute(USER_ID));
     }
-    //edit song
+
+    @PutMapping("/songs/edit")
+    public SongWithoutUserDTO edit(@Valid @RequestBody SongEditRequestDTO requestDTO, HttpSession session){
+        return songService.edit((long) session.getAttribute(USER_ID), requestDTO);
+    }
 }

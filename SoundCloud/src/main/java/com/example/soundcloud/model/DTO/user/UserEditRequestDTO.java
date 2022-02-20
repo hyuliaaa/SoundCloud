@@ -19,6 +19,4 @@ public class UserEditRequestDTO {
     @NotNull(message = "Gender cannot be null!")
     private Character gender;
 
-    private String profilePictureURL;
-
 }

@@ -97,11 +97,19 @@ public class UserService {
     }
 
     public UserResponseDTO edit(long id, UserEditRequestDTO dto){
+
         User user = utils.getUserById(id);
+        if (!user.getUsername().equals(dto.getUsername()) && userRepository.findByUsername(dto.getUsername()).isPresent()){
+            throw new BadRequestException("Username already exists!");
+        }
+        if (!user.getEmail().equals(dto.getEmail()) && userRepository.findByEmail(dto.getEmail()).isPresent()){
+            throw new BadRequestException("Email already exists!");
+        }
+
+        user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         user.setAge(dto.getAge());
         user.setGender(dto.getGender());
-        user.setProfilePictureUrl(dto.getProfilePictureURL());
         userRepository.save(user);
         return modelMapper.map(user, UserResponseDTO.class);
     }

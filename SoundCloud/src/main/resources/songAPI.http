@@ -41,3 +41,17 @@ Content-Type: application/json
 ### get song by name
 GET localhost:9090/songs/ghost
 Content-Type: application/json
+
+### edit song
+
+PUT localhost:9090/songs/edit
+Content-Type: application/json
+
+{
+  "id": 10,
+  "title": "new",
+  "isPublic": false,
+  "description": {
+    "content": "  "
+  }
+}

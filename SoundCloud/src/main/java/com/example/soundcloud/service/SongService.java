@@ -1,7 +1,9 @@
 package com.example.soundcloud.service;
 
 import com.example.soundcloud.exceptions.BadRequestException;
+import com.example.soundcloud.exceptions.ForbiddenException;
 import com.example.soundcloud.model.DTO.description.DescriptionDTO;
+import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
@@ -126,7 +128,7 @@ public class SongService {
         song.getLikes().add(user);
         songRepository.save(song);
         modelMapper.map(song,dto);
-        dto.setNumberOflikes(song.getLikes().size());
+        dto.setNumberOfLikes(song.getLikes().size());
         return dto;
     }
 
@@ -146,7 +148,7 @@ public class SongService {
         SongWithLikesDTO dto = new SongWithLikesDTO();
         song.getLikes().remove(user);
         modelMapper.map(song,dto);
-        dto.setNumberOflikes(song.getLikes().size());
+        dto.setNumberOfLikes(song.getLikes().size());
         songRepository.save(song);
         return dto;
     }
@@ -169,5 +171,36 @@ public class SongService {
         song.setCoverPhotoUrl(name);
         songRepository.save(song);
         return f.getName();
+    }
+
+    public SongWithoutUserDTO edit(long userId, SongEditRequestDTO requestDTO) {
+        Song song = utils.getSongById(requestDTO.getId());
+        if (song.getOwner().getId() != userId){
+            throw new ForbiddenException("You cannot edit this song!");
+        }
+
+        song.setTitle(requestDTO.getTitle());
+        song.setPublic(requestDTO.getIsPublic());
+
+        if(requestDTO.getDescription() == null){
+            Description description = song.getDescription();
+            song.setDescription(null);
+            descriptionRepository.delete(description);
+        }
+        else{
+            if (song.getDescription() != null) {
+                if (!requestDTO.getDescription().getContent().equals(song.getDescription().getContent())) {
+                    Description description = song.getDescription();
+                    song.setDescription(modelMapper.map(requestDTO.getDescription(), Description.class));
+                    descriptionRepository.delete(description);
+                }
+            }
+            else {
+                song.setDescription(modelMapper.map(requestDTO.getDescription(), Description.class));
+            }
+        }
+
+        songRepository.save(song);
+        return modelMapper.map(song, SongWithoutUserDTO.class);
     }
 }
