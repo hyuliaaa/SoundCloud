@@ -1,5 +1,6 @@
 package com.example.soundcloud.controller;
 
+import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.model.DTO.user.*;
 import com.example.soundcloud.service.UserService;
 import lombok.Data;
@@ -26,7 +27,11 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserRegisterRequestDTO requestDTO){
+    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserRegisterRequestDTO requestDTO, HttpSession session){
+
+        if(session.getAttribute(LOGGED) != null){
+            throw new BadRequestException("You must log out in order to register again");
+        }
 
         UserResponseDTO responseDTO = userService.register(requestDTO);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
@@ -34,6 +39,10 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<UserResponseDTO> login(@Valid @RequestBody UserLoginRequestDTO requestDTO, HttpServletRequest request){
+
+        if(request.getSession().getAttribute(LOGGED) != null){
+            throw new BadRequestException("You are already logged in");
+        }
 
         UserResponseDTO responseDTO = userService.login(requestDTO);
         HttpSession session = request.getSession();
