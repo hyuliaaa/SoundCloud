@@ -1,6 +1,7 @@
 package com.example.soundcloud.controller;
 
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
+import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.DTO.user.UserResponseDTO;
 import com.example.soundcloud.service.SongService;
@@ -37,13 +38,13 @@ public class SongController {
     }
 
     @PostMapping("/songs/{id}/like")
-    ResponseEntity<Integer>like(@PathVariable long id, HttpSession session){
-        return new ResponseEntity<>(songService.like(id, (long) session.getAttribute(USER_ID)), HttpStatus.CREATED);
+    ResponseEntity<SongWithLikesDTO>like(@PathVariable long id, HttpSession session){
+        return ResponseEntity.ok(songService.like(id,(long)session.getAttribute(USER_ID)));
     }
 
     @DeleteMapping("/songs/{id}/unlike")
-    ResponseEntity<Integer>unlike(@PathVariable long id, HttpSession session){
-        return new ResponseEntity<>(songService.unlike(id, (long) session.getAttribute(USER_ID)), HttpStatus.NO_CONTENT);
+    ResponseEntity<SongWithLikesDTO>unlike(@PathVariable long id, HttpSession session){
+        return ResponseEntity.ok(songService.unlike(id, (long) session.getAttribute(USER_ID)));
     }
 
     @GetMapping("/songs/{title}")

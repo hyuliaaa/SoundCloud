@@ -3,6 +3,7 @@ package com.example.soundcloud.service;
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.model.DTO.description.DescriptionDTO;
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
+import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.entities.Description;
 import com.example.soundcloud.model.entities.Song;
@@ -109,7 +110,7 @@ public class SongService {
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    public int like(long songId, long userId) {
+    public SongWithLikesDTO like(long songId, long userId) {
 
         User user = utils.getUserById(userId);
         Song song = utils.getSongById(songId);
@@ -121,13 +122,16 @@ public class SongService {
             throw new BadRequestException("User already liked this song!");
         }
 
+        SongWithLikesDTO dto = new SongWithLikesDTO();
         song.getLikes().add(user);
         songRepository.save(song);
-        return song.getLikes().size();
+        modelMapper.map(song,dto);
+        dto.setNumberOflikes(song.getLikes().size());
+        return dto;
     }
 
 
-    public int unlike(long songId, long userId) {
+    public SongWithLikesDTO unlike(long songId, long userId) {
 
         User user = utils.getUserById(userId);
         Song song = utils.getSongById(songId);
@@ -139,9 +143,12 @@ public class SongService {
             throw new BadRequestException("User haven't liked this song!");
         }
 
+        SongWithLikesDTO dto = new SongWithLikesDTO();
         song.getLikes().remove(user);
-        songRepository.delete(song);
-        return song.getLikes().size();
+        modelMapper.map(song,dto);
+        dto.setNumberOflikes(song.getLikes().size());
+        songRepository.save(song);
+        return dto;
     }
 
     public SongWithoutUserDTO getByTitle(String title) {
