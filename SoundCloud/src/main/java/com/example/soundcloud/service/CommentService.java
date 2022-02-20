@@ -5,6 +5,7 @@ import com.example.soundcloud.exceptions.ForbiddenException;
 import com.example.soundcloud.model.DTO.comment.CommentAddRequestDTO;
 import com.example.soundcloud.model.DTO.comment.CommentEditRequestDTO;
 import com.example.soundcloud.model.DTO.comment.CommentResponseDTO;
+import com.example.soundcloud.model.DTO.comment.CommentWithLikesDTO;
 import com.example.soundcloud.model.entities.Comment;
 import com.example.soundcloud.model.entities.Song;
 import com.example.soundcloud.model.entities.User;
@@ -34,7 +35,7 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public void addComment(long userId, CommentAddRequestDTO requestDTO) {
+    public CommentResponseDTO addComment(long userId, CommentAddRequestDTO requestDTO) {
         User user = utils.getUserById(userId);
         Song song = getUtils().getSongById(requestDTO.getSongId());
 
@@ -51,6 +52,7 @@ public class CommentService {
             comment.setParentComment(parentComment);
         }
         commentRepository.save(comment);
+        return modelMapper.map(comment, CommentResponseDTO.class);
     }
 
     public Set<CommentResponseDTO> getAll(long id) {
@@ -61,7 +63,7 @@ public class CommentService {
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    public void like(long userId, long commentId) {
+    public CommentWithLikesDTO like(long userId, long commentId) {
         User user = utils.getUserById(userId);
         Comment comment =utils.getCommentById(commentId);
         if (comment.getLikes().contains(user)){
@@ -69,9 +71,13 @@ public class CommentService {
         }
         comment.getLikes().add(user);
         commentRepository.save(comment);
+        CommentResponseDTO dto = modelMapper.map(comment, CommentResponseDTO.class);
+        CommentWithLikesDTO dto1 = modelMapper.map(dto, CommentWithLikesDTO.class);
+        dto1.setLikes(comment.getLikes().size());
+        return dto1;
     }
 
-    public void unlike(long userId, long commentId) {
+    public CommentWithLikesDTO unlike(long userId, long commentId) {
         User user = utils.getUserById(userId);
         Comment comment =utils.getCommentById(commentId);
         if (!comment.getLikes().contains(user)){
@@ -79,6 +85,10 @@ public class CommentService {
         }
         comment.getLikes().remove(user);
         commentRepository.save(comment);
+        CommentResponseDTO dto = modelMapper.map(comment, CommentResponseDTO.class);
+        CommentWithLikesDTO dto1 = modelMapper.map(dto, CommentWithLikesDTO.class);
+        dto1.setLikes(comment.getLikes().size());
+        return dto1;
     }
 
     public CommentResponseDTO edit(long userId, long commentId, CommentEditRequestDTO requestDTO) {

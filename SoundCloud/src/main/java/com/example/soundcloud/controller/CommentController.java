@@ -3,6 +3,7 @@ package com.example.soundcloud.controller;
 import com.example.soundcloud.model.DTO.comment.CommentAddRequestDTO;
 import com.example.soundcloud.model.DTO.comment.CommentEditRequestDTO;
 import com.example.soundcloud.model.DTO.comment.CommentResponseDTO;
+import com.example.soundcloud.model.DTO.comment.CommentWithLikesDTO;
 import com.example.soundcloud.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,9 +27,9 @@ public class CommentController {
 
     //TODO figure out what to return
     @PostMapping("/comment")
-    ResponseEntity<String> addComment(@Valid @RequestBody CommentAddRequestDTO requestDTO, HttpSession session){
-        commentService.addComment((long)session.getAttribute(USER_ID), requestDTO);
-        return new ResponseEntity<>("Comment was added successfully", HttpStatus.CREATED);
+    ResponseEntity<CommentResponseDTO> addComment(@Valid @RequestBody CommentAddRequestDTO requestDTO, HttpSession session){
+        CommentResponseDTO responseDTO = commentService.addComment((long)session.getAttribute(USER_ID), requestDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/songs/{id}/comments")
@@ -37,15 +38,15 @@ public class CommentController {
     }
 
     @PostMapping("/comments/{id}/like")
-    ResponseEntity<String> like(@PathVariable(name = "id") long commentId, HttpSession session){
-        commentService.like((long) session.getAttribute(USER_ID), commentId);
-        return ResponseEntity.ok("Comment was liked");
+    ResponseEntity<CommentWithLikesDTO> like(@PathVariable(name = "id") long commentId, HttpSession session){
+        CommentWithLikesDTO dto = commentService.like((long) session.getAttribute(USER_ID), commentId);
+        return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/comments/{id}/like")
-    ResponseEntity<String> unlike(@PathVariable(name = "id") long commentId, HttpSession session){
-        commentService.unlike((long) session.getAttribute(USER_ID), commentId);
-        return ResponseEntity.ok("Comment was unliked");
+    ResponseEntity<CommentWithLikesDTO> unlike(@PathVariable(name = "id") long commentId, HttpSession session){
+        CommentWithLikesDTO dto = commentService.unlike((long) session.getAttribute(USER_ID), commentId);
+        return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/comments/{id}/edit")

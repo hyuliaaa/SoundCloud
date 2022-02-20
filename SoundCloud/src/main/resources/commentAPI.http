@@ -5,23 +5,23 @@ Content-Type: application/json
 
 {
   "songId": 3,
-  "content": "s",
+  "content": "sss",
   "parentCommentId": null
 }
 
 ### get all comments by song id
 
-GET localhost:9090/songs/2/comments
+GET localhost:9090/songs/1/comments
 Content-Type: application/json
 
 ### like comment
 
-POST localhost:9090/comments/1/like
+POST localhost:9090/comments/9/like
 Content-Type: application/json
 
 ### unlike comment
 
-DELETE localhost:9090/comments/1/like
+DELETE localhost:9090/comments/8/like
 Content-Type: application/json
 
 ### edit comment
