@@ -1,6 +1,7 @@
 package com.example.soundcloud.controller;
 
 import com.example.soundcloud.exceptions.BadRequestException;
+import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.DTO.user.*;
 import com.example.soundcloud.service.UserService;
 import lombok.Data;
@@ -108,5 +109,10 @@ public class UserController {
     @PostMapping("/logout")
     public void logout(HttpSession session){
         session.invalidate();
+    }
+
+    @GetMapping("users/{id}/liked-songs")
+    public ResponseEntity<Set<SongWithoutUserDTO>> getLikedSongs(@PathVariable long id){
+        return ResponseEntity.ok(userService.getLikedSongs(id));
     }
 }

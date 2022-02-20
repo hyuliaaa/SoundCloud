@@ -1,6 +1,7 @@
 package com.example.soundcloud.service;
 
 import com.example.soundcloud.exceptions.BadRequestException;
+import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.DTO.user.*;
 import com.example.soundcloud.model.entities.User;
 import com.example.soundcloud.model.repositories.UserRepository;
@@ -165,4 +166,10 @@ public class UserService {
         return user.getFollowers().stream().map((user1 -> modelMapper.map(user1, UserResponseDTO.class))).collect(Collectors.toSet());
     }
 
+    //returns only the comments of a user, without the properties of the user
+    // todo ask correct way of returning
+    public Set<SongWithoutUserDTO> getLikedSongs(long id) {
+        User user = utils.getUserById(id);
+        return user.getLikedSongs().stream().map((song -> modelMapper.map(song, SongWithoutUserDTO.class))).collect(Collectors.toSet());
+    }
 }
