@@ -4,12 +4,12 @@ POST localhost:9090/upload_song
 Content-Type: application/json
 
 {
-  "title": "ghost",
+  "title": "newer",
   "songUrl": "djfj",
   "coverPhotoUrl": null,
   "isPublic": true,
   "description": {
-    "content": "hi #tag #new"
+    "content": "hi #try #neww"
   }
 }
 

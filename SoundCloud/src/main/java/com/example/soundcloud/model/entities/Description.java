@@ -1,10 +1,12 @@
 package com.example.soundcloud.model.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "descriptions")
@@ -20,11 +22,11 @@ public class Description {
     @Column
     private String content;
 
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(
             name = "descriptions_have_tags",
             joinColumns = @JoinColumn(name="description_id"),
             inverseJoinColumns = @JoinColumn(name="tag_id")
     )
-    private Set<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 }

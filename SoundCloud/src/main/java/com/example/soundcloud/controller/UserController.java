@@ -95,6 +95,7 @@ public class UserController {
     public ResponseEntity<Set<UserResponseDTO>> getFollowers(@PathVariable long id) {
         return ResponseEntity.ok(userService.getFollowers(id));
     }
+
     @PostMapping("/logout")
     public void logout(HttpSession session){
         session.invalidate();

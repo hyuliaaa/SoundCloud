@@ -55,14 +55,25 @@ public class SongService {
         song.setUploadedAt(LocalDateTime.now());
         //TODO validate song url
 
-        DescriptionDTO description = uploadDTO.getDescription();
+        Description description = song.getDescription();
+        Set<Tag> tags = new HashSet<>();
+
         if (description != null){
-            descriptionRepository.save(modelMapper.map(uploadDTO.getDescription(), Description.class));
-            Set<Tag> tags = getTags(description.getContent());
-            tagRepository.saveAll(tags);
+            tags = getTags(description.getContent());
+
+            Set<Tag> filtered = tags.stream().filter(tag -> tagRepository.findTagByName(tag.getName()).isEmpty())
+                    .collect(Collectors.toSet());
+            description.getTags().addAll(filtered);
+        }
+        songRepository.save(song);
+
+        if (description != null){
+            tags.stream().filter(tag -> tagRepository.findTagByName(tag.getName()).isPresent())
+                    .map(tag -> tagRepository.findTagByName(tag.getName()).get())
+                    .forEach(tag -> description.getTags().add(tag));
+            descriptionRepository.save(description);
         }
 
-        songRepository.save(song);
         return modelMapper.map(song, SongWithoutUserDTO.class);
     }
 

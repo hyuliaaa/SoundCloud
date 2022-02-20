@@ -14,8 +14,8 @@ Content-Type: application/json
 
 {
 
-"username" : "nnnn",
-"password" : "4P@ssword"
+"username" : "nel",
+"password" : "1P@ssword"
 
 }
 
@@ -50,9 +50,9 @@ Content-Type: application/json
   "username": "nel",
   "email": "nel@gmailll.com" ,
   "password": "1P@ssword",
-  "confirmedPassword": "1P@sswoRrd",
+  "confirmedPassword": "1P@ssword",
   "age": 14,
-  "gender": null
+  "gender": "f"
 }
 
 ### change password
@@ -86,7 +86,7 @@ Content-Type: application/json
 
 ### follow user
 
-POST localhost:9090/users/2/follow
+POST localhost:9090/users/1/follow
 Content-Type: application/json
 
 ### get following

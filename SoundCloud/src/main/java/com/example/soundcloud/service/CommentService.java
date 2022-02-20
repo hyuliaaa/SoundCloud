@@ -46,7 +46,7 @@ public class CommentService {
         if (requestDTO.getParentCommentId() != null){
             Comment parentComment = utils.getCommentById(requestDTO.getParentCommentId());
             if (song != parentComment.getSong()){
-                throw new BadRequestException("comment and parent comment songs do not match");
+                throw new BadRequestException("Comment and parent comment songs do not match");
             }
             comment.setParentComment(parentComment);
         }
