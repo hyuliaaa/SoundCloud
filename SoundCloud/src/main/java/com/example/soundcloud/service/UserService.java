@@ -11,6 +11,9 @@ import com.example.soundcloud.util.Utils;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
+import static org.passay.DigestDictionaryRule.ERROR_CODE;
 
 
 @Service
@@ -39,6 +43,9 @@ public class UserService {
 
     @Autowired
     private Utils utils;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private VerificationTokenRepository tokenRepository;
@@ -190,5 +197,47 @@ public class UserService {
 
     public VerificationToken getVerificationToken(String token) {
         return tokenRepository.findByToken(token);
+    }
+
+    public void generateNewPassword(ResetPasswordDTO dto){
+
+        User user = utils.getUserByEmail(dto.getEmail());
+        String password = generatePassayPassword();
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+
+        String message = "Your new password is: " + password;
+        emailService.sendSimpleMessage(user.getEmail(), "Reset password", message);
+    }
+
+    private String generatePassayPassword() {
+        PasswordGenerator gen = new PasswordGenerator();
+        org.passay.CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
+        CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);
+        lowerCaseRule.setNumberOfCharacters(2);
+
+        org.passay.CharacterData upperCaseChars = EnglishCharacterData.UpperCase;
+        CharacterRule upperCaseRule = new CharacterRule(upperCaseChars);
+        upperCaseRule.setNumberOfCharacters(2);
+
+        org.passay.CharacterData digitChars = EnglishCharacterData.Digit;
+        CharacterRule digitRule = new CharacterRule(digitChars);
+        digitRule.setNumberOfCharacters(2);
+
+        org.passay.CharacterData specialChars = new org.passay.CharacterData() {
+            public String getErrorCode() {
+                return ERROR_CODE;
+            }
+
+            public String getCharacters() {
+                return "!@#$%^&*()_+";
+            }
+        };
+        CharacterRule splCharRule = new CharacterRule(specialChars);
+        splCharRule.setNumberOfCharacters(2);
+
+        String password = gen.generatePassword(10, splCharRule, lowerCaseRule,
+                upperCaseRule, digitRule);
+        return password;
     }
 }

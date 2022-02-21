@@ -36,6 +36,10 @@ public class Utils {
         return userRepository.findByUsername(username).orElseThrow(()->new NotFoundException("User not found!"));
     }
 
+    public User getUserByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow(()->new NotFoundException("Email not found!"));
+    }
+
     public Song getSongById(long id){
         return songRepository.findById(id).orElseThrow(() -> new NotFoundException("Song not found!"));
     }

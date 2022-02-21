@@ -7,6 +7,7 @@ import com.example.soundcloud.model.DTO.user.*;
 import com.example.soundcloud.model.entities.User;
 import com.example.soundcloud.service.EmailService;
 import com.example.soundcloud.service.UserService;
+import com.example.soundcloud.util.Utils;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class UserController {
 
     @Autowired
     ModelMapper modelMapper;
+
+    @Autowired
+    Utils utils;
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserRegisterRequestDTO requestDTO, HttpServletRequest request){
@@ -126,8 +130,15 @@ public class UserController {
         session.invalidate();
     }
 
-    @GetMapping("users/{id}/liked-songs")
+    @GetMapping("/users/{id}/liked-songs")
     public ResponseEntity<Set<SongWithoutUserDTO>> getLikedSongs(@PathVariable long id){
         return ResponseEntity.ok(userService.getLikedSongs(id));
+    }
+
+    //todo what to return?
+    @PutMapping("/reset_password")
+    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordDTO dto){
+        userService.generateNewPassword(dto);
+        return ResponseEntity.ok("A temporary password has been sent to your email address");
     }
 }

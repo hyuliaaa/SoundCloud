@@ -20,7 +20,8 @@ public class LoggedInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (Objects.equals(request.getServletPath(), "/register")
             || Objects.equals(request.getServletPath(), "/login")
-            || Objects.equals(request.getServletPath(), "/confirm_registration")){
+            || Objects.equals(request.getServletPath(), "/confirm_registration")
+            || Objects.equals(request.getServletPath(), "/reset_password")){
             return true;
         }
 

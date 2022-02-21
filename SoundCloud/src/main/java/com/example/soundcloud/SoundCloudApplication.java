@@ -35,7 +35,7 @@ public class SoundCloudApplication {
         mailSender.setPort(587);
 
         mailSender.setUsername("veronikatodorovva@gmail.com");
-        mailSender.setPassword("ngbrnntawsabiers");
+        mailSender.setPassword("password:)");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
