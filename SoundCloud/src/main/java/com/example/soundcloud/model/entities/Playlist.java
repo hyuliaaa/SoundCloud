@@ -25,7 +25,7 @@ public class Playlist {
     private User owner;
 
     @Column
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @Column
     private LocalDateTime lastModified;
@@ -37,9 +37,19 @@ public class Playlist {
     private boolean isPublic;
 
 
-
-    @ManyToMany(mappedBy = "likedPlaylists")
+    @ManyToMany()
+    @JoinTable(
+            name = "users_like_playlists",
+            joinColumns = @JoinColumn(name="playlist_id"),
+            inverseJoinColumns = @JoinColumn(name="user_id")
+    )
     Set<User> likes;
+
+
+    // TODO: 2/21/2022
+
+//    @OneToMany(mappedBy = "playlist")
+//    Set<Song> songs;
 
     //TODO: add description id
 

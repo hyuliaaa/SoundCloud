@@ -60,12 +60,7 @@ public class User {
     @ManyToMany (mappedBy = "following")
     private Set<User> followers;
 
-    @ManyToMany()
-    @JoinTable(
-            name = "users_like_playlists",
-            joinColumns = @JoinColumn(name="user_id"),
-            inverseJoinColumns = @JoinColumn(name="playlist_id")
-    )
+    @ManyToMany(mappedBy = "likes")
     private Set<Playlist> likedPlaylists;
 
     @Column

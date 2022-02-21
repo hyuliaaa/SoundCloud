@@ -54,4 +54,10 @@ public class Song {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "description_id", referencedColumnName = "id")
     private Description description;
+
+
+    //todo
+    @ManyToOne
+    @JoinColumn(name="song_id")
+    private Playlist playlist;
 }

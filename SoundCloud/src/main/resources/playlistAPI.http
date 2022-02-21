@@ -1,0 +1,15 @@
+POST localhost:9090/create_playlist
+Content-Type: application/json
+
+{
+  "title": "newer",
+  "is_public": 1
+  }
+
+### like a playlist
+POST localhost:9090/playlists/1/like
+Content-Type: application/json
+
+### unlike playlist
+DELETE localhost:9090/playlists/1/unlike
+Content-Type: application/json

@@ -2,9 +2,11 @@ package com.example.soundcloud.util;
 
 import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.model.entities.Comment;
+import com.example.soundcloud.model.entities.Playlist;
 import com.example.soundcloud.model.entities.Song;
 import com.example.soundcloud.model.entities.User;
 import com.example.soundcloud.model.repositories.CommentRepository;
+import com.example.soundcloud.model.repositories.PlaylistRepository;
 import com.example.soundcloud.model.repositories.SongRepository;
 import com.example.soundcloud.model.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class Utils {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private PlaylistRepository playlistRepository;
+
     public User getUserById(long id){
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found!"));
     }
@@ -37,6 +42,10 @@ public class Utils {
 
     public Comment getCommentById(long id){
         return commentRepository.findById(id).orElseThrow(() -> new NotFoundException("Comment not found!"));
+    }
+
+    public Playlist getPlaylistById(long id){
+       return playlistRepository.findById(id).orElseThrow(() -> new NotFoundException("Playlist not found!"));
     }
 
     public Song getSongByTitle(String title){
