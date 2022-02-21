@@ -37,7 +37,7 @@ public class CommentService {
 
     public CommentResponseDTO addComment(long userId, CommentAddRequestDTO requestDTO) {
         User user = utils.getUserById(userId);
-        Song song = getUtils().getSongById(requestDTO.getSongId());
+        Song song = utils.getSongById(requestDTO.getSongId());
 
         Comment comment = Comment.builder()
                 .user(user).song(song)

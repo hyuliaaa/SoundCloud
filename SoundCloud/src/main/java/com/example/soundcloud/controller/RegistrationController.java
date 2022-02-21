@@ -25,7 +25,6 @@ public class RegistrationController {
         if (verificationToken == null) {
             throw new BadRequestException("Invalid token!");
         }
-
         User user = verificationToken.getUser();
 
         user.setEnabled(true);

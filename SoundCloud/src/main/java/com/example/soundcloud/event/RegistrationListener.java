@@ -5,7 +5,6 @@ import com.example.soundcloud.service.EmailService;
 import com.example.soundcloud.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -31,8 +30,8 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
         String recipientAddress = user.getEmail();
         String subject = "Confirm registration";
-        String confirmationUrl = event.getAppUrl() + "/confirm_registration?token=" + token;
+        String confirmationUrl = "/confirm_registration?token=" + token;
 
-        emailService.sendSimpleMessage(recipientAddress, subject, "http://localhost:9090" + confirmationUrl);
+        emailService.sendSimpleMessage(recipientAddress, subject, "Confirm your email here: http://localhost:9090" + confirmationUrl);
     }
 }

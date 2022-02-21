@@ -49,8 +49,7 @@ public class UserController {
         }
 
         User user = userService.register(requestDTO);
-        String appUrl = request.getContextPath();
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), appUrl));
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user));
         return new ResponseEntity<>(modelMapper.map(user, UserResponseDTO.class), HttpStatus.CREATED);
     }
 

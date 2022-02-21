@@ -160,7 +160,7 @@ public class SongService {
 
     @SneakyThrows
     public String uploadSongPicture(long song_id,MultipartFile file, long id) {
-        Song song = songRepository.getById(song_id);
+        Song song = utils.getSongById(song_id);
         if(song.getOwner().getId() != id){
             throw new BadRequestException("Not allowed to modify songs of other users!");
         }

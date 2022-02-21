@@ -7,9 +7,11 @@ import javax.validation.constraints.*;
 @Data
 public class UserEditRequestDTO {
 
-    @NotBlank(message = "Invalid username!")
+    @NotBlank(message = "Username cannot be empty")
+    @Pattern(regexp = "^[^\\s]{1,16}$", message = "Invalid username")
     private String username;
 
+    @NotBlank(message = "Email cannot be empty")
     @Email(message = "Invalid email address!")
     private String email;
 

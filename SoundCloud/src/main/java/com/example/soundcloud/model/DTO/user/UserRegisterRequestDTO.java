@@ -7,7 +7,9 @@ import javax.validation.constraints.*;
 @Data
 public class UserRegisterRequestDTO {
 
+    //no spaces, 1-16 symbols
     @NotBlank(message = "Username cannot be empty")
+    @Pattern(regexp = "^[^\\s]{1,16}$", message = "Invalid username")
     private String username;
 
     @NotBlank(message = "Email cannot be empty")
@@ -20,6 +22,7 @@ public class UserRegisterRequestDTO {
     message = "Password is too weak")
     private String password;
 
+    @NotBlank(message = "Confirmed password cannot be empty")
     private String confirmedPassword;
 
     @Min(value = 14, message = "Sorry, you don't meet SoundCloud's minimum age requirements")

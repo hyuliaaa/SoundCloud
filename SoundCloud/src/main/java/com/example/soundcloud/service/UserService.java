@@ -141,8 +141,6 @@ public class UserService {
         userRepository.save(user);
         return f.getName();
     }
-
-
 //    public void deleteUser(UserResponseDTO user) {
 //        userRepository.delete(modelMapper.map(user,User.class));
 //    }

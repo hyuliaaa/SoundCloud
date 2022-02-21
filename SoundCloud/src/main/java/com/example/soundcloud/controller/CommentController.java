@@ -24,8 +24,6 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-
-    //TODO figure out what to return
     @PostMapping("/comment")
     ResponseEntity<CommentResponseDTO> addComment(@Valid @RequestBody CommentAddRequestDTO requestDTO, HttpSession session){
         CommentResponseDTO responseDTO = commentService.addComment((long)session.getAttribute(USER_ID), requestDTO);

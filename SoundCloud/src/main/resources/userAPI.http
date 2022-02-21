@@ -25,7 +25,7 @@ POST localhost:9090/login
 Content-Type: application/json
 
 {
-  "username" : "nnnn",
+  "username" : "nnn",
   "password" : "1P@ssword"
 }
 
@@ -47,8 +47,8 @@ POST localhost:9090/register
 Content-Type: application/json
 
 {
-  "username": "Veronika",
-  "email": "veronikatodorovva@gmail.com",
+  "username": "user",
+  "email": "a@a.a",
   "password": "1P@ssword",
   "confirmedPassword": "1P@ssword",
   "age": 14,

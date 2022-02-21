@@ -8,17 +8,19 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @Data
 public class SongEditRequestDTO {
 
-    @Min(value = 1, message = "Invalid song id")
+    @NotNull(message = "Song id cannot be null")
+    @Positive(message = "Invalid song id")
     private int id;
 
     @NotBlank(message = "Title cannot be blank")
     private String title;
 
-    @NotNull
+    @NotNull(message = "Privacy cannot be null")
     private Boolean isPublic;
 
     @Valid

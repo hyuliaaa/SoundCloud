@@ -5,7 +5,6 @@ import com.example.soundcloud.exceptions.ForbiddenException;
 import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.exceptions.UnauthorizedException;
 import com.example.soundcloud.model.DTO.ErrorDTO;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,10 +42,10 @@ public class GlobalExceptionHandler {
         errorDTO.setStatus(HttpStatus.BAD_REQUEST);
 
         List<String> errorMessages = e.getFieldErrors()
-                .stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .stream().map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.toList());
 
-        errorDTO.setMessage(String.join("; ", errorMessages));
+        errorDTO.setMessage(String.join(", ", errorMessages));
         errorDTO.setDateTime(LocalDateTime.now());
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
