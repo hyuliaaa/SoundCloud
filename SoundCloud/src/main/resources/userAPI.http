@@ -47,8 +47,8 @@ POST localhost:9090/register
 Content-Type: application/json
 
 {
-  "username": "nell",
-  "email": "nell@gmailll.com" ,
+  "username": "Veronika",
+  "email": "veronikatodorovva@gmail.com",
   "password": "1P@ssword",
   "confirmedPassword": "1P@ssword",
   "age": 14,

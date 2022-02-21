@@ -1,11 +1,16 @@
 package com.example.soundcloud.controller;
 
+import com.example.soundcloud.event.OnRegistrationCompleteEvent;
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.DTO.user.*;
+import com.example.soundcloud.model.entities.User;
+import com.example.soundcloud.service.EmailService;
 import com.example.soundcloud.service.UserService;
 import lombok.Data;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,15 +32,26 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserRegisterRequestDTO requestDTO, HttpSession session){
+    @Autowired
+    private EmailService emailService;
 
-        if(session.getAttribute(LOGGED) != null){
+    @Autowired
+    ApplicationEventPublisher eventPublisher;
+
+    @Autowired
+    ModelMapper modelMapper;
+
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserRegisterRequestDTO requestDTO, HttpServletRequest request){
+
+        if (request.getSession().getAttribute(LOGGED) != null){
             throw new BadRequestException("You must log out in order to register again");
         }
 
-        UserResponseDTO responseDTO = userService.register(requestDTO);
-        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+        User user = userService.register(requestDTO);
+        String appUrl = request.getContextPath();
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), appUrl));
+        return new ResponseEntity<>(modelMapper.map(user, UserResponseDTO.class), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")

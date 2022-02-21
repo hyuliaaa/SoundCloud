@@ -68,4 +68,7 @@ public class User {
     )
     private Set<Playlist> likedPlaylists;
 
+    @Column
+    private boolean enabled;
+
 }

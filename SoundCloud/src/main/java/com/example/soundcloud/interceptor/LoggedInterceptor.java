@@ -19,9 +19,11 @@ public class LoggedInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (Objects.equals(request.getServletPath(), "/register")
-            || Objects.equals(request.getServletPath(), "/login")) {
+            || Objects.equals(request.getServletPath(), "/login")
+            || Objects.equals(request.getServletPath(), "/confirm_registration")){
             return true;
         }
+
         HttpSession session = request.getSession();
         if (session.isNew()
             || session.getAttribute(LOGGED) == null

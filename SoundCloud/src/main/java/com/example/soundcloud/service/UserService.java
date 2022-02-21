@@ -4,7 +4,9 @@ import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.DTO.user.*;
 import com.example.soundcloud.model.entities.User;
+import com.example.soundcloud.model.entities.VerificationToken;
 import com.example.soundcloud.model.repositories.UserRepository;
+import com.example.soundcloud.model.repositories.VerificationTokenRepository;
 import com.example.soundcloud.util.Utils;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -38,7 +40,10 @@ public class UserService {
     @Autowired
     private Utils utils;
 
-    public UserResponseDTO register(UserRegisterRequestDTO requestDTO){
+    @Autowired
+    private VerificationTokenRepository tokenRepository;
+
+    public User register(UserRegisterRequestDTO requestDTO){
         String username = requestDTO.getUsername();
         String email = requestDTO.getEmail();
 
@@ -60,7 +65,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
         user.setCreatedAt(LocalDateTime.now());
         userRepository.save(user);
-        return modelMapper.map(user, UserResponseDTO.class);
+        return user;
     }
 
     public UserResponseDTO login(UserLoginRequestDTO requestDTO){
@@ -171,5 +176,21 @@ public class UserService {
     public Set<SongWithoutUserDTO> getLikedSongs(long id) {
         User user = utils.getUserById(id);
         return user.getLikedSongs().stream().map((song -> modelMapper.map(song, SongWithoutUserDTO.class))).collect(Collectors.toSet());
+    }
+
+    public void createVerificationToken(User user, String token) {
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setUser(user);
+        verificationToken.setToken(token);
+
+        tokenRepository.save(verificationToken);
+    }
+
+    public void saveRegisteredUser(User user) {
+        userRepository.save(user);
+    }
+
+    public VerificationToken getVerificationToken(String token) {
+        return tokenRepository.findByToken(token);
     }
 }

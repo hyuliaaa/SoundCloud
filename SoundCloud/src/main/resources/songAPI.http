@@ -5,8 +5,6 @@ Content-Type: application/json
 
 {
   "title": "newer",
-  "songUrl": "djfj",
-  "coverPhotoUrl": null,
   "isPublic": true,
   "description": {
     "content": "hi #try #neww"
