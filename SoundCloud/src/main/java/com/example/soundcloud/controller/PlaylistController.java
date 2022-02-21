@@ -8,9 +8,8 @@ import com.example.soundcloud.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -27,6 +26,11 @@ public class PlaylistController {
     ResponseEntity<PlaylistResponseDTO> createPlaylist(@Valid @RequestBody PlaylistCreateRequestDTO createPlaylistDTO, HttpSession session){
         long id = (long) session.getAttribute(USER_ID);
         return new ResponseEntity<>(playlistService.createPlaylist(id, createPlaylistDTO), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/playlists/{playlist_id}/upload-playlist-image")
+    public String uploadSongImage(@PathVariable("playlist_id") long playlistId, @RequestParam(name = "picture") MultipartFile file, HttpSession session){
+        return playlistService.uploadPlaylistPicture(playlistId,file, (long) session.getAttribute(USER_ID));
     }
 
 }
