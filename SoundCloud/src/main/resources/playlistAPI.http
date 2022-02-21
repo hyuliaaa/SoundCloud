@@ -13,3 +13,10 @@ Content-Type: application/json
 ### unlike playlist
 DELETE localhost:9090/playlists/1/unlike
 Content-Type: application/json
+
+
+
+### add song to playlist
+POST localhost:9090/playlists/add_song?playlistId=1&songId=12
+Content-Type: application/json
+
