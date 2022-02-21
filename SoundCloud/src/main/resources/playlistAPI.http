@@ -9,3 +9,7 @@ Content-Type: application/json
 ### like a playlist
 POST localhost:9090/playlists/1/like
 Content-Type: application/json
+
+### unlike playlist
+DELETE localhost:9090/playlists/1/unlike
+Content-Type: application/json

@@ -40,5 +40,11 @@ public class PlaylistController {
         return ResponseEntity.ok(playlistService.like(id,(long)session.getAttribute(USER_ID)));
     }
 
+    @DeleteMapping("/playlists/{id}/unlike")
+    ResponseEntity<PlaylistWithLikesDTO>unlike(@PathVariable long id, HttpSession session){
+        return ResponseEntity.ok(playlistService.unlike(id,(long)session.getAttribute(USER_ID)));
+    }
+
+
 }
 
