@@ -2,12 +2,10 @@ package com.example.soundcloud.model.DTO.playlist;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
-public class PlaylistResponseDTO {
+public class PlaylistWithLikesDTO {
 
     private String title;
     private LocalDateTime createdAt;
@@ -15,4 +13,5 @@ public class PlaylistResponseDTO {
     private String coverPhotoUrl;
     private long ownerId;
     private boolean isPublic;
+    private int numberOfLikes;
 }

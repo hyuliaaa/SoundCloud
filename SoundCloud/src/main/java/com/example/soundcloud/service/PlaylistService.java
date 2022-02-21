@@ -3,6 +3,7 @@ package com.example.soundcloud.service;
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.model.DTO.playlist.PlaylistCreateRequestDTO;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
+import com.example.soundcloud.model.DTO.playlist.PlaylistWithLikesDTO;
 import com.example.soundcloud.model.entities.Playlist;
 import com.example.soundcloud.model.entities.Song;
 import com.example.soundcloud.model.entities.User;
@@ -66,6 +67,26 @@ public class PlaylistService {
         playlist.setCoverPhotoUrl(name);
         playlistRepository.save(playlist);
         return f.getName();
+    }
+
+    public PlaylistWithLikesDTO like(long playlistId, long userId) {
+
+        User user = utils.getUserById(userId);
+        Playlist playlist = utils.getPlaylistById(playlistId);
+
+        if (!playlist.isPublic() && playlist.getOwner() != user)
+            throw new BadRequestException("Playlist is private");
+
+        if(user.getLikedPlaylists().contains(playlist)){
+            throw new BadRequestException("User already liked this playlist!");
+        }
+
+        PlaylistWithLikesDTO dto = new PlaylistWithLikesDTO();
+        playlist.getLikes().add(user);
+        playlistRepository.save(playlist);
+        modelMapper.map(playlist,dto);
+        dto.setNumberOfLikes(playlist.getLikes().size());
+        return dto;
     }
 
 }

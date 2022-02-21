@@ -2,7 +2,9 @@ package com.example.soundcloud.controller;
 
 import com.example.soundcloud.model.DTO.playlist.PlaylistCreateRequestDTO;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
+import com.example.soundcloud.model.DTO.playlist.PlaylistWithLikesDTO;
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
+import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,11 @@ public class PlaylistController {
     @PostMapping("/playlists/{playlist_id}/upload-playlist-image")
     public String uploadSongImage(@PathVariable("playlist_id") long playlistId, @RequestParam(name = "picture") MultipartFile file, HttpSession session){
         return playlistService.uploadPlaylistPicture(playlistId,file, (long) session.getAttribute(USER_ID));
+    }
+
+    @PostMapping("/playlists/{id}/like")
+    ResponseEntity<PlaylistWithLikesDTO>like(@PathVariable long id, HttpSession session){
+        return ResponseEntity.ok(playlistService.like(id,(long)session.getAttribute(USER_ID)));
     }
 
 }
