@@ -4,6 +4,7 @@ import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.model.DTO.playlist.PlaylistCreateRequestDTO;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
 import com.example.soundcloud.model.DTO.playlist.PlaylistWithLikesDTO;
+import com.example.soundcloud.model.DTO.playlist.PlaylistWithSongsDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
 import com.example.soundcloud.model.entities.Playlist;
 import com.example.soundcloud.model.entities.Song;
@@ -16,6 +17,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -107,5 +109,38 @@ public class PlaylistService {
         dto.setNumberOfLikes(playlist.getLikes().size());
         playlistRepository.save(playlist);
         return dto;
+    }
+
+    public PlaylistWithSongsDTO addSong(long playlistId,long songId, long userId) {
+        User user = utils.getUserById(userId);
+        Playlist playlist = utils.getPlaylistById(playlistId);
+        Song song = utils.getSongById(songId);
+        if(playlist.getSongs().contains(song)){
+            throw new BadRequestException("This song is already in the playlist!");
+        }
+        playlist.getSongs().add(song);
+        playlist.setLastModified(LocalDateTime.now());
+        PlaylistWithSongsDTO dto = new PlaylistWithSongsDTO();
+        playlistRepository.save(playlist);
+        modelMapper.map(playlist,dto);
+        dto.setNumberOfSongs(playlist.getSongs().size());
+        return dto;
+    }
+
+    public PlaylistWithSongsDTO deleteSong(long playlistId, long songId, long userId) {
+        User user = utils.getUserById(userId);
+        Playlist playlist = utils.getPlaylistById(playlistId);
+        Song song = utils.getSongById(songId);
+        if(!playlist.getSongs().contains(song)){
+            throw new BadRequestException("This song is not in the list!");
+        }
+        playlist.getSongs().remove(song);
+        playlist.setLastModified(LocalDateTime.now());
+        playlistRepository.save(playlist);
+        PlaylistWithSongsDTO dto = new PlaylistWithSongsDTO();
+        modelMapper.map(playlist,dto);
+        dto.setNumberOfSongs(playlist.getSongs().size());
+        return dto;
+
     }
 }

@@ -3,9 +3,7 @@ package com.example.soundcloud.controller;
 import com.example.soundcloud.model.DTO.playlist.PlaylistCreateRequestDTO;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
 import com.example.soundcloud.model.DTO.playlist.PlaylistWithLikesDTO;
-import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
-import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
-import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
+import com.example.soundcloud.model.DTO.playlist.PlaylistWithSongsDTO;
 import com.example.soundcloud.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,14 +34,28 @@ public class PlaylistController {
     }
 
     @PostMapping("/playlists/{id}/like")
-    ResponseEntity<PlaylistWithLikesDTO>like(@PathVariable long id, HttpSession session){
+    ResponseEntity<PlaylistWithLikesDTO> like(@PathVariable long id, HttpSession session){
         return ResponseEntity.ok(playlistService.like(id,(long)session.getAttribute(USER_ID)));
     }
 
     @DeleteMapping("/playlists/{id}/unlike")
-    ResponseEntity<PlaylistWithLikesDTO>unlike(@PathVariable long id, HttpSession session){
+    ResponseEntity<PlaylistWithLikesDTO> unlike(@PathVariable long id, HttpSession session){
         return ResponseEntity.ok(playlistService.unlike(id,(long)session.getAttribute(USER_ID)));
     }
+
+    @PostMapping("/playlists/add_song")
+    ResponseEntity<PlaylistWithSongsDTO> addSong(@RequestParam long playlistId,@RequestParam long songId, HttpSession session){
+        return ResponseEntity.ok(playlistService.addSong(playlistId,songId,(long)session.getAttribute(USER_ID)));
+    }
+
+    @DeleteMapping("/playlists/delete_song")
+    ResponseEntity<PlaylistWithSongsDTO> deleteSong(@RequestParam long playlistId,@RequestParam long songId, HttpSession session){
+        return ResponseEntity.ok(playlistService.deleteSong(playlistId,songId,(long)session.getAttribute(USER_ID)));
+    }
+
+
+
+
 
 
 }
