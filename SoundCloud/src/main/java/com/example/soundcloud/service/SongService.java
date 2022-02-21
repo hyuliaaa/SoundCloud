@@ -7,10 +7,7 @@ import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
-import com.example.soundcloud.model.entities.Description;
-import com.example.soundcloud.model.entities.Song;
-import com.example.soundcloud.model.entities.Tag;
-import com.example.soundcloud.model.entities.User;
+import com.example.soundcloud.model.entities.*;
 import com.example.soundcloud.model.repositories.DescriptionRepository;
 import com.example.soundcloud.model.repositories.SongRepository;
 import com.example.soundcloud.model.repositories.TagRepository;
@@ -203,4 +200,15 @@ public class SongService {
         songRepository.save(song);
         return modelMapper.map(song, SongWithoutUserDTO.class);
     }
+
+//    public void delete(long userId, long songId) {
+//        User user = utils.getUserById(userId);
+//        Song song = utils.getSongById(songId);
+//
+//        if (!song.getOwner().equals(user)){
+//            throw new ForbiddenException("You cannot delete this song!");
+//        }
+//
+//        songRepository.delete(song);
+//    }
 }
