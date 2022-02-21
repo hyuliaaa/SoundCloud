@@ -22,4 +22,24 @@ public class FileController {
         }
         Files.copy(f.toPath(),response.getOutputStream());
     }
+
+    @SneakyThrows
+    @GetMapping("song_pictures/{filename}")
+    public void downloadSongPicture(@PathVariable String filename, HttpServletResponse response){
+        File f = new File("song_pictures" + File.separator + filename);
+        if(!f.exists()){
+            throw new NotFoundException("File does not exist!");
+        }
+        Files.copy(f.toPath(),response.getOutputStream());
+    }
+
+    @SneakyThrows
+    @GetMapping("playlist_pictures/{filename}")
+    public void downloadPlaylistPicture(@PathVariable String filename, HttpServletResponse response){
+        File f = new File("playlist_pictures" + File.separator + filename);
+        if(!f.exists()){
+            throw new NotFoundException("File does not exist!");
+        }
+        Files.copy(f.toPath(),response.getOutputStream());
+    }
 }
