@@ -37,7 +37,7 @@ public class Playlist {
     private boolean isPublic;
 
 
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(
             name = "users_like_playlists",
             joinColumns = @JoinColumn(name="playlist_id"),
@@ -45,11 +45,13 @@ public class Playlist {
     )
     Set<User> likes;
 
-
-    // TODO: 2/21/2022
-
-//    @OneToMany(mappedBy = "playlist")
-//    Set<Song> songs;
+    @ManyToMany
+    @JoinTable(
+            name = "playlists_have_songs",
+            joinColumns = @JoinColumn(name="playlist_id"),
+            inverseJoinColumns = @JoinColumn(name = "song_id")
+    )
+    Set<Song> songs;
 
     //TODO: add description id
 

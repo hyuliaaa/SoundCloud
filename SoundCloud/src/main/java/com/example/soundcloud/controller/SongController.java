@@ -62,4 +62,10 @@ public class SongController {
     public SongWithoutUserDTO edit(@Valid @RequestBody SongEditRequestDTO requestDTO, HttpSession session){
         return songService.edit((long) session.getAttribute(USER_ID), requestDTO);
     }
+
+//    @DeleteMapping("/songs/{id}")
+//    ResponseEntity<String> delete(@PathVariable(name = "id") long songId, HttpSession session){
+//        songService.delete((long) session.getAttribute(USER_ID), songId);
+//        return ResponseEntity.ok("Songs was deleted");
+//    }
 }

@@ -56,8 +56,7 @@ public class Song {
     private Description description;
 
 
-    //todo
-    @ManyToOne
+    @ManyToMany
     @JoinColumn(name="song_id")
-    private Playlist playlist;
+    private Set<Playlist> playlists;
 }
