@@ -126,4 +126,21 @@ public class PlaylistService {
         dto.setNumberOfSongs(playlist.getSongs().size());
         return dto;
     }
+
+    public PlaylistWithSongsDTO deleteSong(long playlistId, long songId, long userId) {
+        User user = utils.getUserById(userId);
+        Playlist playlist = utils.getPlaylistById(playlistId);
+        Song song = utils.getSongById(songId);
+        if(!playlist.getSongs().contains(song)){
+            throw new BadRequestException("This song is not in the list!");
+        }
+        playlist.getSongs().remove(song);
+        playlist.setLastModified(LocalDateTime.now());
+        playlistRepository.save(playlist);
+        PlaylistWithSongsDTO dto = new PlaylistWithSongsDTO();
+        modelMapper.map(playlist,dto);
+        dto.setNumberOfSongs(playlist.getSongs().size());
+        return dto;
+
+    }
 }

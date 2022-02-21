@@ -20,3 +20,7 @@ Content-Type: application/json
 POST localhost:9090/playlists/add_song?playlistId=1&songId=12
 Content-Type: application/json
 
+### delete song from playlist
+DELETE localhost:9090/playlists/delete_song?playlistId=1&songId=12
+Content-Type: application/json
+

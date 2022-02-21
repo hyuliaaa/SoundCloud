@@ -48,6 +48,13 @@ public class PlaylistController {
         return ResponseEntity.ok(playlistService.addSong(playlistId,songId,(long)session.getAttribute(USER_ID)));
     }
 
+    @DeleteMapping("/playlists/delete_song")
+    ResponseEntity<PlaylistWithSongsDTO> deleteSong(@RequestParam long playlistId,@RequestParam long songId, HttpSession session){
+        return ResponseEntity.ok(playlistService.deleteSong(playlistId,songId,(long)session.getAttribute(USER_ID)));
+    }
+
+
+
 
 
 
