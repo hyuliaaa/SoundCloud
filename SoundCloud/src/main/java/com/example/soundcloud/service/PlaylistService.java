@@ -1,11 +1,12 @@
 package com.example.soundcloud.service;
 
 import com.example.soundcloud.exceptions.BadRequestException;
-import com.example.soundcloud.model.DTO.playlist.PlaylistCreateRequestDTO;
-import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
-import com.example.soundcloud.model.DTO.playlist.PlaylistWithLikesDTO;
-import com.example.soundcloud.model.DTO.playlist.PlaylistWithSongsDTO;
+import com.example.soundcloud.exceptions.ForbiddenException;
+import com.example.soundcloud.model.DTO.playlist.*;
+import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
+import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
+import com.example.soundcloud.model.entities.Description;
 import com.example.soundcloud.model.entities.Playlist;
 import com.example.soundcloud.model.entities.Song;
 import com.example.soundcloud.model.entities.User;
@@ -70,6 +71,7 @@ public class PlaylistService {
         File f = new File("playlist_pictures" + File.separator + name);
         Files.copy(file.getInputStream(), Path.of(f.toURI()));
         playlist.setCoverPhotoUrl(name);
+        playlist.setLastModified(LocalDateTime.now());
         playlistRepository.save(playlist);
         return f.getName();
     }
@@ -167,6 +169,21 @@ public class PlaylistService {
         }
         playlistRepository.delete(playlist);
     }
+
+    public PlaylistResponseDTO edit(long userId, PlaylistEditDTO dto) {
+        Playlist playlist = utils.getPlaylistById(dto.getId());
+        if(playlist.getOwner().getId()!=userId){
+            throw new ForbiddenException("You cannot edit this playlist!");
+        }
+
+        //todo check for descriptions
+        playlist.setTitle(dto.getTitle());
+        playlist.setPublic(dto.getIsPublic());
+        playlist.setLastModified(LocalDateTime.now());
+        playlistRepository.save(playlist);
+        return modelMapper.map(playlist,PlaylistResponseDTO.class);
+    }
+
 
 //    public List<PlaylistWithLikesDTO> orderByLikesAsc() {
 //        List<PlaylistWithLikesDTO> playlists = utils.findByOrderByLikesAsc();

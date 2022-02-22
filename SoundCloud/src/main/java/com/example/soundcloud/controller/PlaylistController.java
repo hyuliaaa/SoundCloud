@@ -1,9 +1,7 @@
 package com.example.soundcloud.controller;
 
-import com.example.soundcloud.model.DTO.playlist.PlaylistCreateRequestDTO;
-import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
-import com.example.soundcloud.model.DTO.playlist.PlaylistWithLikesDTO;
-import com.example.soundcloud.model.DTO.playlist.PlaylistWithSongsDTO;
+import com.example.soundcloud.model.DTO.playlist.*;
+import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +81,11 @@ public class PlaylistController {
     ResponseEntity<String> delete(@PathVariable(name = "id") long id, HttpSession session) {
         playlistService.delete(id,(long) session.getAttribute(USER_ID));
         return ResponseEntity.ok("Playlist was deleted");
+    }
+
+    @PutMapping("playlists/edit")
+    public PlaylistResponseDTO edit(@Valid @RequestBody PlaylistEditDTO dto, HttpSession session){
+        return playlistService.edit((long) session.getAttribute(USER_ID), dto);
     }
 
 
