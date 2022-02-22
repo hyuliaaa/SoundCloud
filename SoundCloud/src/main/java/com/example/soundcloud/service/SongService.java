@@ -2,7 +2,7 @@ package com.example.soundcloud.service;
 
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.exceptions.ForbiddenException;
-import com.example.soundcloud.model.DTO.description.DescriptionDTO;
+import com.example.soundcloud.exceptions.UnsupportedMediaTypeException;
 import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
@@ -22,9 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.UnsupportedMediaTypeStatusException;
 
 import javax.transaction.Transactional;
 import java.io.File;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -99,9 +101,16 @@ public class SongService {
 
     @SneakyThrows
     private String uploadSongFile(MultipartFile file){
+
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         String name = System.nanoTime() + "." + extension;
         File f = new File("songs" + File.separator + name);
+
+        String mimeType = Files.probeContentType(f.toPath());
+        if (!mimeType.contains("audio" + File.separator)){
+            throw new UnsupportedMediaTypeException("You must provide an audio file");
+        }
+
         Files.copy(file.getInputStream(), Path.of(f.toURI()));
         return f.getName();
     }
@@ -175,6 +184,12 @@ public class SongService {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         String name = System.nanoTime() + "." + extension;
         File f = new File("song_pictures" + File.separator + name);
+
+        String mimeType = Files.probeContentType(f.toPath());
+        if (!mimeType.contains("image" + File.separator)){
+            throw new UnsupportedMediaTypeException("You must provide an image file");
+        }
+
         Files.copy(file.getInputStream(), Path.of(f.toURI()));
         song.setCoverPhotoUrl(name);
         songRepository.save(song);
