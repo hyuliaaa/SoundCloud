@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import java.util.List;
 import java.util.Set;
 
 import static com.example.soundcloud.controller.UserController.USER_ID;
@@ -65,6 +66,25 @@ public class PlaylistController {
     public ResponseEntity<Set<PlaylistResponseDTO>> getPlaylistByTitle(@PathVariable String title){
         return ResponseEntity.ok(playlistService.getByTitle(title));
     }
+
+//    //http://localhost:9090/playlists/order-by-likes/?id=acs
+//    @GetMapping("/playlists/order-by-likes/")
+//    public ResponseEntity<List<PlaylistWithLikesDTO>> getPlaylistByLikes(@RequestParam String id){
+//        if(id.equals("asc")){
+//            return ResponseEntity.ok(playlistService.orderByLikesAsc());
+//        }
+//
+//        //todo think where this should be in if and else
+//        //if wrong request param is given
+//            return ResponseEntity.ok(playlistService.orderByLikesDesc());
+//    }
+
+    @DeleteMapping("playlists/{id}")
+    ResponseEntity<String> delete(@PathVariable(name = "id") long id, HttpSession session) {
+        playlistService.delete(id,(long) session.getAttribute(USER_ID));
+        return ResponseEntity.ok("Playlist was deleted");
+    }
+
 
 
 

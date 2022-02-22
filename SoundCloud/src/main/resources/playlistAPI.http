@@ -33,3 +33,9 @@ Content-Type: application/json
 GET localhost:9090/playlists/find-by-title/h
 Content-Type: application/json
 
+### order playlist by likes
+GET localhost:9090/playlists/order-by-likes/?id=acs
+
+### delete playlist
+DELETE localhost:9090/playlists/1
+Content-Type: application/json

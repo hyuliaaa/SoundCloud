@@ -2,6 +2,7 @@ package com.example.soundcloud.util;
 
 import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
+import com.example.soundcloud.model.DTO.playlist.PlaylistWithLikesDTO;
 import com.example.soundcloud.model.entities.Comment;
 import com.example.soundcloud.model.entities.Playlist;
 import com.example.soundcloud.model.entities.Song;
@@ -14,6 +15,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -72,4 +76,36 @@ public class Utils {
         }
         return playlists;
     }
+//
+//    public List<PlaylistWithLikesDTO> findByOrderByLikesDesc()
+//    {
+//        List<Playlist> playlists = playlistRepository.findByOrderByLikesDesc();
+//        if(playlists.size()==0){
+//            throw new NotFoundException("No available playlists!");
+//        }
+//        List <PlaylistWithLikesDTO> playlistDTO = new ArrayList<>();
+//        PlaylistWithLikesDTO dto = new PlaylistWithLikesDTO();
+//        for (Playlist playlist : playlists) {
+//            modelMapper.map(playlist,dto);
+//            dto.setNumberOfLikes(playlist.getLikes().size());
+//            playlistDTO.add(dto);
+//        }
+//        return playlistDTO;
+//    }
+//
+//    public List<PlaylistWithLikesDTO> findByOrderByLikesAsc()
+//    {
+//        List<Playlist> playlists = playlistRepository.findByOrdOrderByLikesAsc();
+//        if(playlists.size()==0){
+//            throw new NotFoundException("No available playlists!");
+//        }
+//        List <PlaylistWithLikesDTO> playlistDTO = new ArrayList<>();
+//        PlaylistWithLikesDTO dto = new PlaylistWithLikesDTO();
+//        for (Playlist playlist : playlists) {
+//            modelMapper.map(playlist,dto);
+//            dto.setNumberOfLikes(playlist.getLikes().size());
+//            playlistDTO.add(dto);
+//        }
+//        return playlistDTO;
+//    }
 }
