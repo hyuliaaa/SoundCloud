@@ -3,6 +3,7 @@ package com.example.soundcloud;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -14,6 +15,7 @@ import java.util.Properties;
 
 @SpringBootApplication
 @EnableScheduling
+@EnableConfigurationProperties
 public class SoundCloudApplication {
 
     public static void main(String[] args) {

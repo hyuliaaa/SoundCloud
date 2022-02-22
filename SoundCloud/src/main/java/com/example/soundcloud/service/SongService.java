@@ -1,7 +1,12 @@
 package com.example.soundcloud.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.transfer.TransferManager;
+import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
+import com.amazonaws.services.s3.transfer.Upload;
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.exceptions.ForbiddenException;
+import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.exceptions.UnsupportedMediaTypeException;
 import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
@@ -20,13 +25,10 @@ import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.UnsupportedMediaTypeStatusException;
 
 import javax.transaction.Transactional;
 import java.io.File;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -38,6 +40,8 @@ import java.util.stream.Collectors;
 @Service
 @Data
 public class SongService {
+
+    private static final String STORAGE_BUCKET_NAME = "amazon-soundcloud";
 
     @Autowired
     private SongRepository songRepository;
@@ -56,6 +60,10 @@ public class SongService {
 
     @Autowired
     private Utils utils;
+
+    @Autowired
+    private AmazonS3 amazonS3;
+
 
     @Transactional
     public SongWithoutUserDTO upload(long id, SongUploadRequestDTO uploadDTO, MultipartFile file){
@@ -76,6 +84,7 @@ public class SongService {
             description.getTags().addAll(filtered);
         }
         songRepository.save(song);
+        uploadToAWS(song);
 
         if (description != null){
             tags.stream().filter(tag -> tagRepository.findTagByName(tag.getName()).isPresent())
@@ -113,6 +122,21 @@ public class SongService {
 
         Files.copy(file.getInputStream(), Path.of(f.toURI()));
         return f.getName();
+    }
+
+    private void uploadToAWS(Song song){
+        File f = new File("songs" + File.separator + song.getSongUrl());
+        if(!f.exists()){
+            throw new NotFoundException("File does not not exist!");
+        }
+
+        TransferManager tm = TransferManagerBuilder.standard()
+                .withS3Client(amazonS3)
+                .withMultipartUploadThreshold((long) (5 * 1024 * 1025))
+                .build();
+
+        //todo songs must have unique names
+        Upload upload = tm.upload(STORAGE_BUCKET_NAME, song.getTitle(), f);
     }
 
     public Set<SongWithoutUserDTO> getAllUploaded (long id, long otherUserId){
