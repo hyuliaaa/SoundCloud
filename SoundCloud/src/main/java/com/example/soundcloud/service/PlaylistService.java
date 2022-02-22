@@ -26,6 +26,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 
 @Service
@@ -142,5 +143,18 @@ public class PlaylistService {
         dto.setNumberOfSongs(playlist.getSongs().size());
         return dto;
 
+    }
+
+    public PlaylistResponseDTO getByid(long playlistId, long userId) {
+        Playlist playlist = utils.getPlaylistById(playlistId);
+        User user = utils.getUserById(userId);
+        PlaylistResponseDTO dto = new PlaylistResponseDTO();
+        modelMapper.map(playlist,dto);
+        return dto;
+    }
+
+    public Set<PlaylistResponseDTO> getByTitle(String title) {
+        Set<PlaylistResponseDTO> playlists = utils.getPlaylistByTitle(title);
+        return playlists;
     }
 }

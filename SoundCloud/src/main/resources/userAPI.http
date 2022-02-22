@@ -25,7 +25,7 @@ POST localhost:9090/login
 Content-Type: application/json
 
 {
-  "username" : "veronika",
+  "username" : "nnn",
   "password" : "1P@ssword"
 }
 
@@ -34,8 +34,8 @@ POST localhost:9090/register
 Content-Type: application/json
 
 {
-  "username": "veronika",
-  "email": "veronikatodorovva@gmail.com" ,
+  "username": "nnn",
+  "email": "email@gmailll.com" ,
   "password": "1P@ssword",
   "confirmedPassword": "1P@ssword",
   "age": 14,
@@ -75,7 +75,8 @@ Content-Type: application/json
 "username": "nnnn",
 "email": "nelinaa@gmail.com",
 "age": 14,
-"gender": "F"
+"gender": "F",
+"profilePictureUrl": null
 }
 
 ### get user by id
@@ -111,10 +112,10 @@ Content-Type: application/json
 DELETE localhost:9090/delete-user/1
 Content-Type: application/json
 
-###
-PUT localhost:9090/reset_password
+### get liked songs
+GET localhost:9090/users/5/liked-songs
 Content-Type: application/json
 
-{
-  "email": "veronikatodorovva@gmail.com"
-}
+### get liked playlists
+GET localhost:9090/users/2/liked-playlists
+Content-Type: application/json

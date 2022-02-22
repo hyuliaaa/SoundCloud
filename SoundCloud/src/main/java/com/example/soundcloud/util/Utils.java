@@ -1,6 +1,7 @@
 package com.example.soundcloud.util;
 
 import com.example.soundcloud.exceptions.NotFoundException;
+import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
 import com.example.soundcloud.model.entities.Comment;
 import com.example.soundcloud.model.entities.Playlist;
 import com.example.soundcloud.model.entities.Song;
@@ -9,8 +10,12 @@ import com.example.soundcloud.model.repositories.CommentRepository;
 import com.example.soundcloud.model.repositories.PlaylistRepository;
 import com.example.soundcloud.model.repositories.SongRepository;
 import com.example.soundcloud.model.repositories.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -27,6 +32,9 @@ public class Utils {
 
     @Autowired
     private PlaylistRepository playlistRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     public User getUserById(long id){
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found!"));
@@ -54,5 +62,14 @@ public class Utils {
 
     public Song getSongByTitle(String title){
         return songRepository.findByTitle(title).orElseThrow(() -> new NotFoundException("Song not found!"));
+    }
+
+    public Set<PlaylistResponseDTO> getPlaylistByTitle(String title)
+    {
+        Set <PlaylistResponseDTO> playlists =  playlistRepository.findByTitleStartsWith(title).stream().map(playlist ->modelMapper.map(playlist,PlaylistResponseDTO.class)).collect(Collectors.toSet());
+        if(playlists.size()==0){
+            throw new NotFoundException("No available playlists with that title!");
+        }
+        return playlists;
     }
 }

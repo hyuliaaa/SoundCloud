@@ -9,6 +9,7 @@ import com.example.soundcloud.service.SongService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,10 +28,11 @@ public class SongController {
     @Autowired
     private SongService songService;
 
-    @PostMapping("/upload_song")
-    ResponseEntity<SongWithoutUserDTO> upload(@Valid @RequestBody SongUploadRequestDTO uploadDTO, HttpSession session){
+    @PostMapping(value = "/upload_song", consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
+    ResponseEntity<SongWithoutUserDTO> upload(@Valid @RequestParam("dto") String stringDto, @RequestParam("file") MultipartFile file, HttpSession session){
         long id = (long) session.getAttribute(USER_ID);
-        return new ResponseEntity<>(songService.upload(id, uploadDTO), HttpStatus.CREATED);
+        SongUploadRequestDTO dto = songService.toJson(stringDto);
+        return new ResponseEntity<>(songService.upload(id, dto, file), HttpStatus.CREATED);
     }
 
     @GetMapping("/users/{id}/songs")

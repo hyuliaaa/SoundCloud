@@ -13,12 +13,14 @@ import com.example.soundcloud.model.repositories.SongRepository;
 import com.example.soundcloud.model.repositories.TagRepository;
 import com.example.soundcloud.model.repositories.UserRepository;
 import com.example.soundcloud.util.Utils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
@@ -54,12 +56,12 @@ public class SongService {
     private Utils utils;
 
     @Transactional
-    public SongWithoutUserDTO upload(long id, SongUploadRequestDTO uploadDTO) {
+    public SongWithoutUserDTO upload(long id, SongUploadRequestDTO uploadDTO, MultipartFile file){
 
         Song song = modelMapper.map(uploadDTO, Song.class);
         song.setOwner(utils.getUserById(id));
         song.setUploadedAt(LocalDateTime.now());
-        //TODO validate song url
+        song.setSongUrl(uploadSongFile(file));
 
         Description description = song.getDescription();
         Set<Tag> tags = new HashSet<>();
@@ -93,6 +95,15 @@ public class SongService {
         }
 
         return tags.stream().map(Tag::new).collect(Collectors.toSet());
+    }
+
+    @SneakyThrows
+    private String uploadSongFile(MultipartFile file){
+        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+        String name = System.nanoTime() + "." + extension;
+        File f = new File("songs" + File.separator + name);
+        Files.copy(file.getInputStream(), Path.of(f.toURI()));
+        return f.getName();
     }
 
     public Set<SongWithoutUserDTO> getAllUploaded (long id, long otherUserId){
@@ -199,6 +210,12 @@ public class SongService {
 
         songRepository.save(song);
         return modelMapper.map(song, SongWithoutUserDTO.class);
+    }
+
+    @SneakyThrows
+    public SongUploadRequestDTO toJson(String stringDto) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(stringDto, SongUploadRequestDTO.class);
     }
 
 //    public void delete(long userId, long songId) {
