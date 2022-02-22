@@ -6,6 +6,7 @@ import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.DTO.user.UserResponseDTO;
 import com.example.soundcloud.service.SongService;
+import javazoom.jl.decoder.JavaLayerException;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,9 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import java.io.FileNotFoundException;
 import java.util.Set;
 
 import static com.example.soundcloud.controller.UserController.USER_ID;
@@ -63,6 +66,13 @@ public class SongController {
     @PutMapping("/songs/edit")
     public SongWithoutUserDTO edit(@Valid @RequestBody SongEditRequestDTO requestDTO, HttpSession session){
         return songService.edit((long) session.getAttribute(USER_ID), requestDTO);
+    }
+
+    @GetMapping("/songs/{id}/play")
+    public ResponseEntity<String> playAudio(@PathVariable long id, HttpSession session) {
+
+        songService.playAudio((long) session.getAttribute(USER_ID), id);
+        return ResponseEntity.ok("Song is playing");
     }
 
 //    @DeleteMapping("/songs/{id}")

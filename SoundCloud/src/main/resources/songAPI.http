@@ -17,7 +17,6 @@ Content-Type: application/json
 {
 "title": "miss",
 "songUrl": "dfg",
-"coverPhotoUrl": null,
 "isPublic": true,
 "description": null
 }
@@ -53,3 +52,8 @@ Content-Type: application/json
     "content": "  "
   }
 }
+
+### play a song
+
+GET localhost:9090/songs/26/play
+Content-Type: application/json

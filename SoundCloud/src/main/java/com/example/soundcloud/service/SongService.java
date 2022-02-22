@@ -19,6 +19,8 @@ import com.example.soundcloud.model.repositories.TagRepository;
 import com.example.soundcloud.model.repositories.UserRepository;
 import com.example.soundcloud.util.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.advanced.AdvancedPlayer;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
@@ -27,8 +29,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.sound.sampled.*;
 import javax.transaction.Transactional;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -255,6 +261,28 @@ public class SongService {
     public SongUploadRequestDTO toJson(String stringDto) {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(stringDto, SongUploadRequestDTO.class);
+    }
+
+    public void playAudio(long userId, long songId) {
+        User user = userRepository.getById(userId);
+        Song song = songRepository.getById(songId);
+
+        if (!song.isPublic() && !song.getOwner().equals(user)) {
+            throw new BadRequestException("Song not found");
+        }
+
+        song.setViews(song.getViews() + 1);
+        songRepository.save(song);
+        File file = new File("songs/" + song.getSongUrl());
+
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+            AdvancedPlayer player = new AdvancedPlayer(inputStream);
+            player.play();
+        } catch (FileNotFoundException e) {
+            throw new NotFoundException("Song was not found in file system");
+        } catch (Exception e) {
+            throw new RuntimeException("Song could not be played");
+        }
     }
 
 //    public void delete(long userId, long songId) {
