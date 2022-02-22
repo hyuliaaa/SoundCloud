@@ -1,15 +1,13 @@
 package com.example.soundcloud.controller;
 
-import com.example.soundcloud.exceptions.BadRequestException;
-import com.example.soundcloud.exceptions.ForbiddenException;
-import com.example.soundcloud.exceptions.NotFoundException;
-import com.example.soundcloud.exceptions.UnauthorizedException;
+import com.example.soundcloud.exceptions.*;
 import com.example.soundcloud.model.DTO.ErrorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -66,6 +64,25 @@ public class GlobalExceptionHandler {
         errorDTO.setMessage(e.getMessage());
         errorDTO.setDateTime(LocalDateTime.now());
         return new ResponseEntity<>(errorDTO, HttpStatus.FORBIDDEN);
+    }
+
+    //todo is this max size ok for pictures?
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorDTO> handleSizeExceeded(Exception e){
+        ErrorDTO errorDTO = new ErrorDTO();
+        errorDTO.setStatus(HttpStatus.PAYLOAD_TOO_LARGE);
+        errorDTO.setMessage("The file you are trying to upload exceeds our file size limit");
+        errorDTO.setDateTime(LocalDateTime.now());
+        return new ResponseEntity<>(errorDTO, HttpStatus.PAYLOAD_TOO_LARGE);
+    }
+
+    @ExceptionHandler(UnsupportedMediaTypeException.class)
+    public ResponseEntity<ErrorDTO> handleUnsupportedMedia(Exception e){
+        ErrorDTO errorDTO = new ErrorDTO();
+        errorDTO.setStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+        errorDTO.setMessage(e.getMessage());
+        errorDTO.setDateTime(LocalDateTime.now());
+        return new ResponseEntity<>(errorDTO, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
     @ExceptionHandler(Exception.class)
