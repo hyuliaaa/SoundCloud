@@ -71,6 +71,7 @@ public class UserService {
         User user = modelMapper.map(requestDTO, User.class);
         user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
         user.setCreatedAt(LocalDateTime.now());
+        user.setLastActive(LocalDateTime.now());
         userRepository.save(user);
         return user;
     }
@@ -83,6 +84,8 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadRequestException("Wrong credentials!");
         }
+        user.setLastActive(LocalDateTime.now());
+        userRepository.save(user);
         return modelMapper.map(user, UserResponseDTO.class);
     }
 
