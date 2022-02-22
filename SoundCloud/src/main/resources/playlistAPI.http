@@ -2,7 +2,7 @@ POST localhost:9090/create_playlist
 Content-Type: application/json
 
 {
-  "title": "mymusic",
+  "title": "mymc",
   "is_public": 0
   }
 
@@ -27,5 +27,9 @@ Content-Type: application/json
 ### get playlist by id
 
 GET localhost:9090/playlists/1
+Content-Type: application/json
+
+### get playlist by title
+GET localhost:9090/playlists/find-by-title/h
 Content-Type: application/json
 

@@ -4,6 +4,7 @@ import com.example.soundcloud.model.DTO.playlist.PlaylistCreateRequestDTO;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
 import com.example.soundcloud.model.DTO.playlist.PlaylistWithLikesDTO;
 import com.example.soundcloud.model.DTO.playlist.PlaylistWithSongsDTO;
+import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import java.util.Set;
 
 import static com.example.soundcloud.controller.UserController.USER_ID;
 
@@ -58,7 +61,10 @@ public class PlaylistController {
         return ResponseEntity.ok(playlistService.getByid(id,(long)session.getAttribute(USER_ID)));
     }
 
-
+    @GetMapping("/playlists/find-by-title/{title}")
+    public ResponseEntity<Set<PlaylistResponseDTO>> getPlaylistByTitle(@PathVariable String title){
+        return ResponseEntity.ok(playlistService.getByTitle(title));
+    }
 
 
 
