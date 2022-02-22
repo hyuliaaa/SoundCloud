@@ -2,6 +2,7 @@ package com.example.soundcloud.controller;
 
 import com.example.soundcloud.event.OnRegistrationCompleteEvent;
 import com.example.soundcloud.exceptions.BadRequestException;
+import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.DTO.user.*;
 import com.example.soundcloud.model.entities.User;
@@ -133,6 +134,11 @@ public class UserController {
     @GetMapping("/users/{id}/liked-songs")
     public ResponseEntity<Set<SongWithoutUserDTO>> getLikedSongs(@PathVariable long id){
         return ResponseEntity.ok(userService.getLikedSongs(id));
+    }
+
+    @GetMapping("users/{id}/liked-playlists")
+    public ResponseEntity<Set<PlaylistResponseDTO>> getLikedPlaylists(@PathVariable long id){
+        return ResponseEntity.ok(userService.getLikedPlaylists(id));
     }
 
     //todo what to return?

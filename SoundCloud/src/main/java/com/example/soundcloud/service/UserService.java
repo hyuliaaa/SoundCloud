@@ -1,6 +1,7 @@
 package com.example.soundcloud.service;
 
 import com.example.soundcloud.exceptions.BadRequestException;
+import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.DTO.user.*;
 import com.example.soundcloud.model.entities.User;
@@ -242,5 +243,10 @@ public class UserService {
         String password = gen.generatePassword(10, splCharRule, lowerCaseRule,
                 upperCaseRule, digitRule);
         return password;
+    }
+
+    public Set<PlaylistResponseDTO> getLikedPlaylists(long id) {
+        User user = utils.getUserById(id);
+        return user.getLikedPlaylists().stream().map(playlist -> modelMapper.map(playlist,PlaylistResponseDTO.class)).collect(Collectors.toSet());
     }
 }
