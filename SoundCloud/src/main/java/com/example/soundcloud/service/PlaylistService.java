@@ -26,6 +26,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 
@@ -157,4 +158,23 @@ public class PlaylistService {
         Set<PlaylistResponseDTO> playlists = utils.getPlaylistByTitle(title);
         return playlists;
     }
+
+    public void delete(long playlistId, long userId) {
+        User user = utils.getUserById(userId);
+        Playlist playlist =utils.getPlaylistById(playlistId);
+        if(!user.getLikedPlaylists().contains(playlist)){
+            throw new BadRequestException("This playlist is not in the user liked playlists!");
+        }
+        playlistRepository.delete(playlist);
+    }
+
+//    public List<PlaylistWithLikesDTO> orderByLikesAsc() {
+//        List<PlaylistWithLikesDTO> playlists = utils.findByOrderByLikesAsc();
+//        return playlists;
+//    }
+//
+//    public List<PlaylistWithLikesDTO> orderByLikesDesc() {
+//        List<PlaylistWithLikesDTO> playlists = utils.findByOrderByLikesDesc();
+//        return playlists;
+//    }
 }
