@@ -42,4 +42,14 @@ public class FileController {
         }
         Files.copy(f.toPath(),response.getOutputStream());
     }
+
+    @SneakyThrows
+    @GetMapping("songs/download-song/{filename}")
+    public void downloadSong(@PathVariable String filename, HttpServletResponse response){
+        File f = new File("songs" + File.separator + filename);
+        if(!f.exists()){
+            throw new NotFoundException("Song does not exist!");
+        }
+        Files.copy(f.toPath(),response.getOutputStream());
+    }
 }
