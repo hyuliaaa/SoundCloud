@@ -202,7 +202,7 @@ public class UserService {
         return tokenRepository.findByToken(token);
     }
 
-    public void generateNewPassword(ResetPasswordDTO dto){
+    public void resetPassword(ResetPasswordDTO dto){
 
         User user = utils.getUserByEmail(dto.getEmail());
         String password = generatePassayPassword();

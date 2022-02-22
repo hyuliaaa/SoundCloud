@@ -2,6 +2,7 @@ package com.example.soundcloud.controller;
 
 import com.example.soundcloud.event.OnRegistrationCompleteEvent;
 import com.example.soundcloud.exceptions.BadRequestException;
+import com.example.soundcloud.exceptions.ForbiddenException;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.DTO.user.*;
 import com.example.soundcloud.model.entities.User;
@@ -49,7 +50,7 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserRegisterRequestDTO requestDTO, HttpServletRequest request){
 
         if (request.getSession().getAttribute(LOGGED) != null){
-            throw new BadRequestException("You must log out in order to register again");
+            throw new ForbiddenException("You must log out in order to register again");
         }
 
         User user = userService.register(requestDTO);
@@ -61,7 +62,7 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> login(@Valid @RequestBody UserLoginRequestDTO requestDTO, HttpServletRequest request){
 
         if(request.getSession().getAttribute(LOGGED) != null){
-            throw new BadRequestException("You are already logged in");
+            throw new ForbiddenException("You are already logged in");
         }
 
         UserResponseDTO responseDTO = userService.login(requestDTO);
@@ -137,8 +138,11 @@ public class UserController {
 
     //todo what to return?
     @PutMapping("/reset_password")
-    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordDTO dto){
-        userService.generateNewPassword(dto);
+    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordDTO dto, HttpSession session){
+        if (session.getAttribute(LOGGED) != null){
+            throw new ForbiddenException("You cannot reset your email when you are logged in");
+        }
+        userService.resetPassword(dto);
         return ResponseEntity.ok("A temporary password has been sent to your email address");
     }
 }

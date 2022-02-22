@@ -4,14 +4,14 @@ POST localhost:9090/comment
 Content-Type: application/json
 
 {
-  "songId": 1,
+  "songId": 2,
   "content": "sss",
   "parentCommentId": null
 }
 
 ### get all comments by song id
 
-GET localhost:9090/songs/1/comments
+GET localhost:9090/songs/2/comments
 Content-Type: application/json
 
 ### like comment
@@ -21,12 +21,12 @@ Content-Type: application/json
 
 ### unlike comment
 
-DELETE localhost:9090/comments/8/like
+DELETE localhost:9090/comments/11/like
 Content-Type: application/json
 
 ### edit comment
 
-PUT localhost:9090/comments/12/edit
+PUT localhost:9090/comments/9/edit
 Content-Type: application/json
 
 {

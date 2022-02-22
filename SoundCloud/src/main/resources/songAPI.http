@@ -24,12 +24,12 @@ Content-Type: application/json
 
 ### find all by owner id, ordered by upload time
 
-GET localhost:9090/users/13/songs
+GET localhost:9090/users/1/songs
 Content-Type: application/json
 
 
 ### like a song
-POST localhost:9090/songs/2/like
+POST localhost:9090/songs/1/like
 Content-Type: application/json
 
 ### unlike a song

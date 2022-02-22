@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.transaction.Transactional;
+
 @RestController
 @Data
 public class RegistrationController {
@@ -22,6 +24,7 @@ public class RegistrationController {
     @Autowired
     private VerificationTokenRepository tokenRepository;
 
+    @Transactional
     @GetMapping("/confirm_registration")
     public ResponseEntity<String> confirmRegistration(@RequestParam("token") String token) {
 
@@ -33,6 +36,7 @@ public class RegistrationController {
 
         user.setEnabled(true);
         userService.saveRegisteredUser(user);
+        tokenRepository.delete(verificationToken);
         return ResponseEntity.ok("Email confirmed successfully!");
     }
 }
