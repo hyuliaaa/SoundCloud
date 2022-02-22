@@ -51,7 +51,7 @@ public class SongController {
     }
 
     @GetMapping("/songs/{title}")
-    public ResponseEntity<SongWithoutUserDTO> getSongByTitle(@PathVariable String title){
+    public ResponseEntity<Set<SongWithoutUserDTO>> getSongByTitle(@PathVariable String title){
         return ResponseEntity.ok(songService.getByTitle(title));
     }
 

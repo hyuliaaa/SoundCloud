@@ -161,9 +161,9 @@ public class SongService {
         return dto;
     }
 
-    public SongWithoutUserDTO getByTitle(String title) {
-        Song song = utils.getSongByTitle(title);
-        return modelMapper.map(song,SongWithoutUserDTO.class);
+    public Set<SongWithoutUserDTO> getByTitle(String title) {
+        Set <SongWithoutUserDTO> songs = utils.getSongByTitle(title);
+        return songs;
     }
 
     @SneakyThrows

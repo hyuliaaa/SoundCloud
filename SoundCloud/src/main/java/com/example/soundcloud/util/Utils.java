@@ -3,6 +3,8 @@ package com.example.soundcloud.util;
 import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
 import com.example.soundcloud.model.DTO.playlist.PlaylistWithLikesDTO;
+import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
+import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.entities.Comment;
 import com.example.soundcloud.model.entities.Playlist;
 import com.example.soundcloud.model.entities.Song;
@@ -64,13 +66,22 @@ public class Utils {
        return playlistRepository.findById(id).orElseThrow(() -> new NotFoundException("Playlist not found!"));
     }
 
-    public Song getSongByTitle(String title){
-        return songRepository.findByTitle(title).orElseThrow(() -> new NotFoundException("Song not found!"));
+    public Set<SongWithoutUserDTO> getSongByTitle(String title){
+
+        Set <SongWithoutUserDTO> songs = songRepository.findByTitleStartsWith(title)
+                .stream().map(song ->modelMapper.map(song,SongWithoutUserDTO.class))
+                .collect(Collectors.toSet());
+        if(songs.size()==0){
+            throw new NotFoundException("No available songs with that name");
+        }
+        return songs;
     }
 
     public Set<PlaylistResponseDTO> getPlaylistByTitle(String title)
     {
-        Set <PlaylistResponseDTO> playlists =  playlistRepository.findByTitleStartsWith(title).stream().map(playlist ->modelMapper.map(playlist,PlaylistResponseDTO.class)).collect(Collectors.toSet());
+        Set <PlaylistResponseDTO> playlists =  playlistRepository.findByTitleStartsWith(title)
+                .stream().map(playlist ->modelMapper.map(playlist,PlaylistResponseDTO.class))
+                .collect(Collectors.toSet());
         if(playlists.size()==0){
             throw new NotFoundException("No available playlists with that title!");
         }
