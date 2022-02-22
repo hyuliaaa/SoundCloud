@@ -19,8 +19,6 @@ import com.example.soundcloud.model.repositories.TagRepository;
 import com.example.soundcloud.model.repositories.UserRepository;
 import com.example.soundcloud.util.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.advanced.AdvancedPlayer;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
@@ -29,12 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.sound.sampled.*;
 import javax.transaction.Transactional;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -69,6 +63,9 @@ public class SongService {
 
     @Autowired
     private AmazonS3 amazonS3;
+
+    //userId, player
+    private HashMap<Long, AudioPlayer> userPlayers = new HashMap<>();
 
 
     @Transactional
@@ -270,19 +267,28 @@ public class SongService {
         if (!song.isPublic() && !song.getOwner().equals(user)) {
             throw new BadRequestException("Song not found");
         }
+        if (userPlayers.containsKey(userId)){
+            throw new BadRequestException("You are already playing a song");
+        }
+
+        AudioPlayer player = new AudioPlayer();
+        userPlayers.put(userId, player);
+        player.play(song);
+    }
+
+    public void stopAudio(long userId) {
+
+        AudioPlayer player = userPlayers.get(userId);
+        if (player == null){
+            throw new BadRequestException("No audio is currently playing");
+        }
+
+        Song song = player.getSong();
+        player.stop();
+        userPlayers.remove(userId);
 
         song.setViews(song.getViews() + 1);
         songRepository.save(song);
-        File file = new File("songs/" + song.getSongUrl());
-
-        try (FileInputStream inputStream = new FileInputStream(file)) {
-            AdvancedPlayer player = new AdvancedPlayer(inputStream);
-            player.play();
-        } catch (FileNotFoundException e) {
-            throw new NotFoundException("Song was not found in file system");
-        } catch (Exception e) {
-            throw new RuntimeException("Song could not be played");
-        }
     }
 
 //    public void delete(long userId, long songId) {

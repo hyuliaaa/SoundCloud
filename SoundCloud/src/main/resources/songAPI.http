@@ -57,3 +57,8 @@ Content-Type: application/json
 
 GET localhost:9090/songs/26/play
 Content-Type: application/json
+
+### stop a song
+
+GET localhost:9090/songs/stop
+Content-Type: application/json

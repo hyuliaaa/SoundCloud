@@ -75,6 +75,13 @@ public class SongController {
         return ResponseEntity.ok("Song is playing");
     }
 
+    @GetMapping("/songs/stop")
+    public ResponseEntity<String> stopAudio(HttpSession session) {
+
+        songService.stopAudio((long) session.getAttribute(USER_ID));
+        return ResponseEntity.ok("Song was stopped");
+    }
+
 //    @DeleteMapping("/songs/{id}")
 //    ResponseEntity<String> delete(@PathVariable(name = "id") long songId, HttpSession session){
 //        songService.delete((long) session.getAttribute(USER_ID), songId);
