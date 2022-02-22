@@ -143,4 +143,12 @@ public class PlaylistService {
         return dto;
 
     }
+
+    public PlaylistResponseDTO getByid(long playlistId, long userId) {
+        Playlist playlist = utils.getPlaylistById(playlistId);
+        User user = utils.getUserById(userId);
+        PlaylistResponseDTO dto = new PlaylistResponseDTO();
+        modelMapper.map(playlist,dto);
+        return dto;
+    }
 }

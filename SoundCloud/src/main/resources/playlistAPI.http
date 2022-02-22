@@ -24,3 +24,8 @@ Content-Type: application/json
 DELETE localhost:9090/playlists/delete_song?playlistId=1&songId=12
 Content-Type: application/json
 
+### get playlist by id
+
+GET localhost:9090/playlists/1
+Content-Type: application/json
+
