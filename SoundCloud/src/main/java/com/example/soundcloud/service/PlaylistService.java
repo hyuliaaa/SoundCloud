@@ -3,10 +3,7 @@ package com.example.soundcloud.service;
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.exceptions.ForbiddenException;
 import com.example.soundcloud.model.DTO.playlist.*;
-import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
-import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
-import com.example.soundcloud.model.entities.Description;
 import com.example.soundcloud.model.entities.Playlist;
 import com.example.soundcloud.model.entities.Song;
 import com.example.soundcloud.model.entities.User;
@@ -18,7 +15,6 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,8 +23,10 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -165,7 +163,7 @@ public class PlaylistService {
         User user = utils.getUserById(userId);
         Playlist playlist =utils.getPlaylistById(playlistId);
         if(!user.getLikedPlaylists().contains(playlist)){
-            throw new BadRequestException("This playlist is not in the user liked playlists!");
+            throw new ForbiddenException("This playlist is not in the user liked playlists!");
         }
         playlistRepository.delete(playlist);
     }
@@ -182,6 +180,13 @@ public class PlaylistService {
         playlist.setLastModified(LocalDateTime.now());
         playlistRepository.save(playlist);
         return modelMapper.map(playlist,PlaylistResponseDTO.class);
+    }
+
+    public Set<PlaylistResponseDTO> getAllUserLikedPlaylists(long userId) {
+        Set<PlaylistResponseDTO> playlistResponseDTOS = utils.getUserById(userId)
+                .getLikedPlaylists().stream()
+                .map(playlist -> modelMapper.map(playlist,PlaylistResponseDTO.class)).collect(Collectors.toSet());
+        return playlistResponseDTOS;
     }
 
 

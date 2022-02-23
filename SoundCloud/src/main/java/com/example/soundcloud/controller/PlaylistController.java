@@ -1,7 +1,7 @@
 package com.example.soundcloud.controller;
 
 import com.example.soundcloud.model.DTO.playlist.*;
-import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
+
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import java.util.List;
 import java.util.Set;
 
 import static com.example.soundcloud.controller.UserController.USER_ID;
@@ -63,6 +62,11 @@ public class PlaylistController {
     @GetMapping("/playlists/find-by-title/{title}")
     public ResponseEntity<Set<PlaylistResponseDTO>> getPlaylistByTitle(@PathVariable String title){
         return ResponseEntity.ok(playlistService.getByTitle(title));
+    }
+
+    @GetMapping("/playlists/view-all-liked")
+    ResponseEntity<Set<PlaylistResponseDTO>> getAllUserLikedPlaylists(HttpSession session){
+        return ResponseEntity.ok(playlistService.getAllUserLikedPlaylists((long) session.getAttribute(USER_ID)));
     }
 
 //    //http://localhost:9090/playlists/order-by-likes/?id=acs
