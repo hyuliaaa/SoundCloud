@@ -259,6 +259,11 @@ public class SongService {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(stringDto, SongUploadRequestDTO.class);
     }
+//
+//    public List <SongWithLikesDTO> orderByLikesAsc() {
+//        List <SongWithLikesDTO> dto = utils.findByOrderByLikesAsc();
+//        return dto;
+//    }
 
     public void playAudio(long userId, long songId) {
         User user = userRepository.getById(userId);
@@ -291,14 +296,14 @@ public class SongService {
         songRepository.save(song);
     }
 
-//    public void delete(long userId, long songId) {
+//    public void delete(long songId, long userId) {
 //        User user = utils.getUserById(userId);
 //        Song song = utils.getSongById(songId);
 //
-//        if (!song.getOwner().equals(user)){
+//        if (!(song.getOwner().equals(user))){
 //            throw new ForbiddenException("You cannot delete this song!");
 //        }
-//
 //        songRepository.delete(song);
 //    }
+
 }

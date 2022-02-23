@@ -53,8 +53,9 @@ public class Playlist {
     )
     Set<Song> songs;
 
-    //TODO: add description id
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "description_id", referencedColumnName = "id")
+    private Description description;
 
 
 }

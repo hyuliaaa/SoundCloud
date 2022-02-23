@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Set;
 
 import static com.example.soundcloud.controller.UserController.USER_ID;
@@ -81,6 +82,17 @@ public class SongController {
         songService.stopAudio((long) session.getAttribute(USER_ID));
         return ResponseEntity.ok("Song was stopped");
     }
+
+
+//    @GetMapping("songs/order-songs-by/{order}")
+//    public ResponseEntity<List<SongWithLikesDTO>> orderSongsByLikes(@PathVariable String order){
+////        if(order.equals("ASC")){
+//            return ResponseEntity.ok(songService.orderByLikesAsc());
+//////        }
+////        return ResponseEntity.ok(songService.orderByLikesDesc());
+//    }
+
+
 
 //    @DeleteMapping("/songs/{id}")
 //    ResponseEntity<String> delete(@PathVariable(name = "id") long songId, HttpSession session){

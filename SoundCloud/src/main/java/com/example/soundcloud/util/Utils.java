@@ -2,7 +2,6 @@ package com.example.soundcloud.util;
 
 import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
-import com.example.soundcloud.model.DTO.playlist.PlaylistWithLikesDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.entities.Comment;
@@ -18,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -86,6 +84,22 @@ public class Utils {
             throw new NotFoundException("No available playlists with that title!");
         }
         return playlists;
+    }
+
+    public List<SongWithLikesDTO> findByOrderByLikesAsc() {
+        List<Song> songs = songRepository.findByOrderByLikesAsc();
+        if(songs.size()==0){
+            throw new NotFoundException("No available songs");
+        }
+        List <SongWithLikesDTO> songsDto = new ArrayList<>();
+        SongWithLikesDTO dto = new SongWithLikesDTO();
+        for (Song song : songs) {
+            modelMapper.map(song,dto);
+            dto.setNumberOfLikes(song.getLikes().size());
+            songsDto.add(dto);
+
+        }
+        return songsDto;
     }
 //
 //    public List<PlaylistWithLikesDTO> findByOrderByLikesDesc()
