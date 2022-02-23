@@ -16,7 +16,7 @@ public class AudioPlayer{
 
     public void play(Song song){
 
-        File file = new File("/Users/veronikatodorova/Desktop/project/SoundCloud/songs/" + song.getSongUrl());
+        File file = new File("songs/" + song.getSongUrl());
 
         try (FileInputStream inputStream = new FileInputStream(file)) {
             this.song = song;
