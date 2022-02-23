@@ -14,6 +14,10 @@ import com.example.soundcloud.model.repositories.SongRepository;
 import com.example.soundcloud.model.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -89,7 +93,7 @@ public class Utils {
     public List<SongWithLikesDTO> findByOrderByLikesAsc() {
         List<Song> songs = songRepository.findByOrderByLikesAsc();
         if(songs.size()==0){
-            throw new NotFoundException("No available songs");
+            throw new NotFoundException("No available songs!");
         }
         List <SongWithLikesDTO> songsDto = new ArrayList<>();
         SongWithLikesDTO dto = new SongWithLikesDTO();
@@ -100,6 +104,25 @@ public class Utils {
 
         }
         return songsDto;
+    }
+
+    public Page<SongWithLikesDTO> getAllSongs(int offset, int pageSize,String field){
+        Page<Song> songs = songRepository.findAll(PageRequest.of(offset, pageSize).withSort(Sort.by(field)));
+        if(songs.getSize()==0){
+            throw new NotFoundException("No available songs!");
+        }
+
+        List<SongWithLikesDTO> songsWithLikes = new ArrayList<>();
+        for (Song song : songs) {
+            SongWithLikesDTO dto = new SongWithLikesDTO();
+            modelMapper.map(song,dto);
+            dto.setNumberOfLikes(song.getLikes().size());
+            songsWithLikes.add(dto);
+        }
+
+        return new PageImpl<>(songsWithLikes.stream()
+                                            .filter(songWithLikesDTO -> songWithLikesDTO.isPublic())
+                                            .collect(Collectors.toList()));
     }
 //
 //    public List<PlaylistWithLikesDTO> findByOrderByLikesDesc()

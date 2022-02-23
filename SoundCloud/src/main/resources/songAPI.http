@@ -4,7 +4,7 @@ POST localhost:9090/upload_song
 Content-Type: application/json
 
 {
-  "title": "newer",
+  "title": "smule",
   "isPublic": true,
   "description": {
     "content": "hi #try #neww"
@@ -15,10 +15,21 @@ POST localhost:9090/upload_song
 Content-Type: application/json
 
 {
-"title": "miss",
+"title": "hev",
 "songUrl": "dfg",
 "isPublic": true,
 "description": null
+}
+
+###
+POST localhost:9090/upload_song
+Content-Type: application/json
+
+{
+  "title": "heaven",
+  "songUrl": "dfg",
+  "isPublic": false,
+  "description": null
 }
 
 ### find all by owner id, ordered by upload time
@@ -62,3 +73,10 @@ Content-Type: application/json
 
 GET localhost:9090/songs/stop
 Content-Type: application/json
+
+### get songs using pagination & sorting of field of song
+
+GET localhost:9090/paginationAndSort/0/3/title
+Content-Type: application/json
+
+
