@@ -9,6 +9,7 @@ import com.example.soundcloud.service.SongService;
 import javazoom.jl.decoder.JavaLayerException;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +43,12 @@ public class SongController {
     @GetMapping("/users/{id}/songs")
     ResponseEntity<Set<SongWithoutUserDTO>> getAllUploadedByUserId(@PathVariable long id, HttpSession session){
         return ResponseEntity.ok(songService.getAllUploaded((long) session.getAttribute(USER_ID), id));
+    }
+
+    @GetMapping("/paginationAndSort/{offset}/{pageSize}/{field}")
+    ResponseEntity<Page<SongWithLikesDTO>> getAllPublicSongs(@PathVariable int offset, @PathVariable int pageSize, @PathVariable String field){
+        return ResponseEntity.ok(songService.getAllPublicSongs(offset,pageSize,field));
+
     }
 
     @PostMapping("/songs/{id}/like")

@@ -24,6 +24,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -155,6 +156,12 @@ public class SongService {
         return songs.stream().sorted(Comparator.comparing(SongWithoutUserDTO::getUploadedAt))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
+
+    public Page<SongWithLikesDTO> getAllPublicSongs(int offset, int pageSize, String field) {
+        Page <SongWithLikesDTO> songs = utils.getAllSongs(offset,pageSize,field);
+        return songs;
+    }
+
 
     public SongWithLikesDTO like(long songId, long userId) {
 
@@ -295,6 +302,7 @@ public class SongService {
         song.setViews(song.getViews() + 1);
         songRepository.save(song);
     }
+
 
 //    public void delete(long songId, long userId) {
 //        User user = utils.getUserById(userId);
