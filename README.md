@@ -45,3 +45,4 @@ Backend functionality of SoundCloud -  application for uploading songs, creating
 - Postman
 - Git
 ## Entity-relationship diagram
+![ER_diagram](https://user-images.githubusercontent.com/54545875/155500134-2467b7ab-898a-4944-9255-397b9cb3f56a.png)
