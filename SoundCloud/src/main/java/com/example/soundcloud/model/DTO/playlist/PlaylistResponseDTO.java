@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Data
 public class PlaylistResponseDTO {
 
+    private long id;
     private String title;
     private LocalDateTime createdAt;
     private LocalDateTime lastModified;
