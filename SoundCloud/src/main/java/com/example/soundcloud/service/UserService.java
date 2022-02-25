@@ -16,6 +16,7 @@ import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -136,9 +137,8 @@ public class UserService {
         return modelMapper.map(user, UserResponseDTO.class);
     }
 
-    public UserResponseDTO getByUsername(String username){
-        User user = utils.getUserByUsername(username);
-        return modelMapper.map(user,UserResponseDTO.class);
+    public Page<UserResponseDTO> getByUsername(int offset, int pageSize, String username){
+        return utils.getUserByUsername(offset,pageSize,username);
     }
 
     @SneakyThrows
@@ -152,9 +152,11 @@ public class UserService {
         userRepository.save(user);
         return f.getName();
     }
-//    public void deleteUser(UserResponseDTO user) {
-//        userRepository.delete(modelMapper.map(user,User.class));
-//    }
+    public UserResponseDTO deleteUser(UserResponseDTO user) {
+        User u = modelMapper.map(user,User.class);
+        userRepository.delete(u);
+        return user;
+    }
 
 
     public void follow(long id, long otherUser) {

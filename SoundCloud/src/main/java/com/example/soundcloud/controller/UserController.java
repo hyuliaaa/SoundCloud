@@ -13,6 +13,7 @@ import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -92,9 +93,9 @@ public class UserController {
         return ResponseEntity.ok(userService.getById(id));
     }
 
-    @GetMapping("/find-by-username/{username}")
-    public ResponseEntity<UserResponseDTO> getUserByUsername(@PathVariable String username){
-        return ResponseEntity.ok(userService.getByUsername(username));
+    @GetMapping("/find-by-username/{username}/{offset}/{pageSize}")
+    public ResponseEntity<Page<UserResponseDTO>> getUserByUsername(@PathVariable String username, @PathVariable int offset, @PathVariable int pageSize){
+        return ResponseEntity.ok(userService.getByUsername(offset,pageSize,username));
     }
 
     @PostMapping("/users/upload")
@@ -103,12 +104,12 @@ public class UserController {
     }
 
 
-//    @DeleteMapping("delete-user/{id}")
-//    public void deleteUser(@PathVariable long id){
-//        UserResponseDTO user = userService.getById(id);
-//        userService.deleteUser(user);
-//        ResponseEntity.status(204);
-//    }
+
+    @DeleteMapping("users/{id}")
+    public ResponseEntity<UserResponseDTO> deleteUser(@PathVariable long id){
+        UserResponseDTO user = userService.getById(id);
+        return ResponseEntity.ok(userService.deleteUser(user));
+    }
 
     @PostMapping("/users/{id}/follow")
     public ResponseEntity<String> followUser(@PathVariable long id, HttpSession session) {

@@ -4,6 +4,7 @@ import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
+import com.example.soundcloud.model.DTO.user.UserResponseDTO;
 import com.example.soundcloud.model.entities.Comment;
 import com.example.soundcloud.model.entities.Playlist;
 import com.example.soundcloud.model.entities.Song;
@@ -14,13 +15,11 @@ import com.example.soundcloud.model.repositories.SongRepository;
 import com.example.soundcloud.model.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -48,9 +47,18 @@ public class Utils {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found!"));
     }
 
-    public User getUserByUsername(String username){
-        return userRepository.findByUsername(username).orElseThrow(()->new NotFoundException("User not found!"));
+    public Page<UserResponseDTO> getUserByUsername(int offset, int pageSize, String username){
+        Pageable pageable = PageRequest.of(offset,pageSize);
+        Page <UserResponseDTO> users =  userRepository.findByUsernameStartsWith(username,pageable)
+                .map(user -> modelMapper.map(user,UserResponseDTO.class));
+        if(users.getSize()==0){
+            throw new NotFoundException("No available users with that name!");
+        }
+
+        return users;
+
     }
+
 
     public User getUserByEmail(String email){
         return userRepository.findByEmail(email).orElseThrow(()->new NotFoundException("Email not found!"));
@@ -107,6 +115,9 @@ public class Utils {
     }
 
     public Page<SongWithLikesDTO> getAllSongs(int offset, int pageSize,String field){
+        if(field.isBlank()){
+            field ="id";
+        }
         Page<Song> songs = songRepository.findAll(PageRequest.of(offset, pageSize).withSort(Sort.by(field)));
         if(songs.getSize()==0){
             throw new NotFoundException("No available songs!");
