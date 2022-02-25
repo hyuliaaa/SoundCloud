@@ -1,6 +1,7 @@
 package com.example.soundcloud.service;
 
 import com.example.soundcloud.model.entities.User;
+import com.example.soundcloud.model.repositories.TagRepository;
 import com.example.soundcloud.model.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,6 +16,9 @@ public class CronJobs {
     private UserRepository userRepository;
 
     @Autowired
+    private TagRepository tagRepository;
+
+    @Autowired
     private EmailService emailService;
 
     @Scheduled(cron = "${cron.expression}")
@@ -24,5 +28,10 @@ public class CronJobs {
         String message = "We've missed you";
 
         userRepository.getInactiveUsers().forEach(user -> emailService.sendSimpleMessage(user.getEmail(), subject, message));
+    }
+
+    @Scheduled(cron = "${cron.expression}")
+    public void clearTags(){
+        tagRepository.deleteAllInBatch(tagRepository.getUnusedTags());
     }
 }

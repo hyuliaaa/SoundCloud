@@ -34,6 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -66,7 +67,7 @@ public class SongService {
     private AmazonS3 amazonS3;
 
     //userId, player
-    private HashMap<Long, AudioPlayer> userPlayers = new HashMap<>();
+    private ConcurrentHashMap<Long, AudioPlayer> userPlayers = new ConcurrentHashMap<>();
 
 
     @Transactional
@@ -78,26 +79,22 @@ public class SongService {
         song.setSongUrl(uploadSongFile(file));
 
         Description description = song.getDescription();
-        Set<Tag> tags = new HashSet<>();
 
         if (description != null){
-            tags = getTags(description.getContent());
-
-            Set<Tag> filtered = tags.stream().filter(tag -> tagRepository.findTagByName(tag.getName()).isEmpty())
-                    .collect(Collectors.toSet());
-            description.getTags().addAll(filtered);
+            createTagsForDescription(description);
         }
         songRepository.save(song);
         uploadToAWS(song);
 
-        if (description != null){
-            tags.stream().filter(tag -> tagRepository.findTagByName(tag.getName()).isPresent())
-                    .map(tag -> tagRepository.findTagByName(tag.getName()).get())
-                    .forEach(tag -> description.getTags().add(tag));
-            descriptionRepository.save(description);
-        }
-
         return modelMapper.map(song, SongWithoutUserDTO.class);
+    }
+
+    private void createTagsForDescription(Description description){
+        Set<Tag> tags = getTags(description.getContent());
+        List<Tag> savedTags = tagRepository.findAll();
+        Set<Tag> unsaved = tags.stream().filter(tag -> !savedTags.contains(tag)).collect(Collectors.toSet());
+        tagRepository.saveAll(unsaved);
+        description.getTags().addAll(tagRepository.findAllByNameIn(tags.stream().map(Tag::getName).collect(Collectors.toSet())));
     }
 
     private Set<Tag> getTags(String content) {
@@ -119,10 +116,11 @@ public class SongService {
         String name = System.nanoTime() + "." + extension;
         File f = new File("songs" + File.separator + name);
 
-//        String mimeType = Files.probeContentType(f.toPath());
-//        if (!mimeType.contains("audio" + File.separator)){
-//            throw new UnsupportedMediaTypeException("You must provide an audio file");
-//        }
+        //todo
+        String mimeType = Files.probeContentType(f.toPath());
+        if (!mimeType.contains("audio" + File.separator)){
+            throw new UnsupportedMediaTypeException("You must provide an audio file");
+        }
 
         Files.copy(file.getInputStream(), Path.of(f.toURI()));
         return f.getName();
@@ -219,10 +217,10 @@ public class SongService {
         String name = System.nanoTime() + "." + extension;
         File f = new File("song_pictures" + File.separator + name);
 
-//        String mimeType = Files.probeContentType(f.toPath());
-//        if (!mimeType.contains("image" + File.separator)){
-//            throw new UnsupportedMediaTypeException("You must provide an image file");
-//        }
+        String mimeType = Files.probeContentType(f.toPath());
+        if (!mimeType.contains("image" + File.separator)){
+            throw new UnsupportedMediaTypeException("You must provide an image file");
+        }
 
         Files.copy(file.getInputStream(), Path.of(f.toURI()));
         song.setCoverPhotoUrl(name);
@@ -230,6 +228,7 @@ public class SongService {
         return f.getName();
     }
 
+    @Transactional
     public SongWithoutUserDTO edit(long userId, SongEditRequestDTO requestDTO) {
         Song song = utils.getSongById(requestDTO.getId());
         if (song.getOwner().getId() != userId){
@@ -239,24 +238,19 @@ public class SongService {
         song.setTitle(requestDTO.getTitle());
         song.setPublic(requestDTO.getIsPublic());
 
-        if(requestDTO.getDescription() == null){
-            Description description = song.getDescription();
+        Description description = song.getDescription();
+
+        if (description != null) {
             song.setDescription(null);
+            description.setTags(null);
             descriptionRepository.delete(description);
         }
-        else{
-            if (song.getDescription() != null) {
-                if (!requestDTO.getDescription().getContent().equals(song.getDescription().getContent())) {
-                    Description description = song.getDescription();
-                    song.setDescription(modelMapper.map(requestDTO.getDescription(), Description.class));
-                    descriptionRepository.delete(description);
-                }
-            }
-            else {
-                song.setDescription(modelMapper.map(requestDTO.getDescription(), Description.class));
-            }
-        }
 
+        if(requestDTO.getDescription() != null){
+            Description newDescription = modelMapper.map(requestDTO.getDescription(), Description.class);
+            createTagsForDescription(newDescription);
+            song.setDescription(newDescription);
+        }
         songRepository.save(song);
         return modelMapper.map(song, SongWithoutUserDTO.class);
     }
