@@ -4,6 +4,7 @@ import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.DTO.user.*;
+import com.example.soundcloud.model.entities.Song;
 import com.example.soundcloud.model.entities.User;
 import com.example.soundcloud.model.entities.VerificationToken;
 import com.example.soundcloud.model.repositories.UserRepository;
@@ -182,11 +183,11 @@ public class UserService {
         return user.getFollowers().stream().map((user1 -> modelMapper.map(user1, UserResponseDTO.class))).collect(Collectors.toSet());
     }
 
-    //returns only the comments of a user, without the properties of the user
-    // todo ask correct way of returning
-    public Set<SongWithoutUserDTO> getLikedSongs(long id) {
+    public Page<SongWithoutUserDTO> getLikedSongs(int offset, int pageSize,long id) {
         User user = utils.getUserById(id);
-        return user.getLikedSongs().stream().map((song -> modelMapper.map(song, SongWithoutUserDTO.class))).collect(Collectors.toSet());
+        return utils.getLikedSongs(offset,pageSize,id);
+
+//        return user.getLikedSongs().stream().map((song -> modelMapper.map(song, SongWithoutUserDTO.class))).collect(Collectors.toSet());
     }
 
     public void createVerificationToken(User user, String token) {

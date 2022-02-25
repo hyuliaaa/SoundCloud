@@ -1,5 +1,6 @@
 package com.example.soundcloud.util;
 
+import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
@@ -134,6 +135,23 @@ public class Utils {
         return new PageImpl<>(songsWithLikes.stream()
                                             .filter(songWithLikesDTO -> songWithLikesDTO.isPublic())
                                             .collect(Collectors.toList()));
+    }
+
+    public Page<SongWithoutUserDTO> getLikedSongs(int offset, int pageSize, long id) {
+        User user = getUserById(id);
+        Set<Song> songs = user.getLikedSongs();
+        if(user.getLikedSongs().size() == 0){
+            throw new BadRequestException("This user does not have liked songs!");
+        }
+
+        Pageable pageable = PageRequest.of(offset,pageSize);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), songs.size());
+
+        List <SongWithoutUserDTO> list = songs.stream().
+                map(song -> modelMapper.map(song,SongWithoutUserDTO.class))
+                .collect(Collectors.toList());
+        return new PageImpl<SongWithoutUserDTO>(list.subList(start,end),pageable, list.size());
     }
 //
 //    public List<PlaylistWithLikesDTO> findByOrderByLikesDesc()

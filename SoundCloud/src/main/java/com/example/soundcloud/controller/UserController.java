@@ -132,9 +132,9 @@ public class UserController {
         session.invalidate();
     }
 
-    @GetMapping("/users/{id}/liked-songs")
-    public ResponseEntity<Set<SongWithoutUserDTO>> getLikedSongs(@PathVariable long id){
-        return ResponseEntity.ok(userService.getLikedSongs(id));
+    @GetMapping("/users/{id}/liked-songs/{offset}/{pageSize}")
+    public ResponseEntity<Page<SongWithoutUserDTO>> getLikedSongs(@PathVariable long id, @PathVariable int offset,@PathVariable int pageSize){
+        return ResponseEntity.ok(userService.getLikedSongs(offset, pageSize, id));
     }
 
     @GetMapping("users/{id}/liked-playlists")
