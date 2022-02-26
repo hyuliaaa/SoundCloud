@@ -1,6 +1,9 @@
 package com.example.soundcloud.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import com.amazonaws.services.s3.transfer.Upload;
@@ -22,14 +25,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -137,8 +143,7 @@ public class SongService {
                 .withMultipartUploadThreshold((long) (5 * 1024 * 1025))
                 .build();
 
-        //todo songs must have unique names
-        Upload upload = tm.upload(STORAGE_BUCKET_NAME, song.getTitle(), f);
+        Upload upload = tm.upload(STORAGE_BUCKET_NAME, song.getSongUrl(), f);
     }
 
     public Set<SongWithoutUserDTO> getAllUploaded (long id, long otherUserId){
@@ -295,6 +300,31 @@ public class SongService {
 
         song.setViews(song.getViews() + 1);
         songRepository.save(song);
+    }
+
+    public byte[] downloadFromS3(long userId, long songId) {
+        User user = utils.getUserById(userId);
+        Song song = utils.getSongById(songId);
+
+        if (!song.isPublic() && !song.getOwner().equals(user)){
+            throw new NotFoundException("Song not found");
+        }
+
+        return downloadFile(song.getSongUrl());
+    }
+
+    @Async
+    public byte[] downloadFile(final String keyName) {
+        try {
+            byte[] content;
+            final S3Object s3Object = amazonS3.getObject(STORAGE_BUCKET_NAME, keyName);
+            final S3ObjectInputStream stream = s3Object.getObjectContent();
+            content = IOUtils.toByteArray(stream);
+            s3Object.close();
+            return content;
+        } catch(AmazonS3Exception | IOException e) {
+            throw new BadRequestException("Song could not be downloaded");
+        }
     }
 
 

@@ -214,7 +214,7 @@ public class UserService {
         userRepository.save(user);
 
         String message = "Your new password is: " + password;
-        emailService.sendSimpleMessage(user.getEmail(), "Reset password", message);
+        new Thread(()-> emailService.sendSimpleMessage(user.getEmail(), "Reset password", message)).start();
     }
 
     private String generatePassayPassword() {

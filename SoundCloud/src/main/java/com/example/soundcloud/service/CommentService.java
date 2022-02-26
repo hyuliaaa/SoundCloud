@@ -45,7 +45,7 @@ public class CommentService {
                 .postedAt(LocalDateTime.now()).build();
 
         if (requestDTO.getParentCommentId() != null){
-            Comment parentComment = utils.getCommentById(requestDTO.getParentCommentId());
+            Comment parentComment = commentRepository.findById(requestDTO.getParentCommentId()).orElseThrow(() ->new BadRequestException("No such parent comment"));
             if (song != parentComment.getSong()){
                 throw new BadRequestException("Comment and parent comment songs do not match");
             }

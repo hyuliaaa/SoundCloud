@@ -40,6 +40,12 @@ public class SongController {
         return new ResponseEntity<>(songService.upload(id, dto, file), HttpStatus.CREATED);
     }
 
+    @GetMapping(value = "/songs/download/{id}", produces = "audio/mpeg")
+    ResponseEntity<byte[]> downloadFromS3(@PathVariable("id") long songId, HttpSession session){
+        long userId = (long) session.getAttribute(USER_ID);
+        return ResponseEntity.ok(songService.downloadFromS3(userId, songId));
+    }
+
     @GetMapping("/users/{id}/songs")
     ResponseEntity<Set<SongWithoutUserDTO>> getAllUploadedByUserId(@PathVariable long id, HttpSession session){
         return ResponseEntity.ok(songService.getAllUploaded((long) session.getAttribute(USER_ID), id));
