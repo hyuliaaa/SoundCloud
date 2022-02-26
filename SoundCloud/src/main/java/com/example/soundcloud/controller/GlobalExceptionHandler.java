@@ -18,19 +18,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorDTO> handleUnauthorized(Exception e){
-        ErrorDTO errorDTO = new ErrorDTO();
-        errorDTO.setStatus(HttpStatus.UNAUTHORIZED);
-        errorDTO.setMessage(e.getMessage());
-        errorDTO.setDateTime(LocalDateTime.now());
+        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.UNAUTHORIZED, e.getMessage(), LocalDateTime.now());
         return new ResponseEntity<>(errorDTO, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorDTO> handleBadRequest(Exception e){
-        ErrorDTO errorDTO = new ErrorDTO();
-        errorDTO.setStatus(HttpStatus.BAD_REQUEST);
-        errorDTO.setMessage(e.getMessage());
-        errorDTO.setDateTime(LocalDateTime.now());
+        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.BAD_REQUEST, e.getMessage(), LocalDateTime.now());
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
 
@@ -50,48 +44,34 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorDTO> handleNotFound(Exception e){
-        ErrorDTO errorDTO = new ErrorDTO();
-        errorDTO.setStatus(HttpStatus.NOT_FOUND);
-        errorDTO.setMessage(e.getMessage());
-        errorDTO.setDateTime(LocalDateTime.now());
+        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.NOT_FOUND, e.getMessage(), LocalDateTime.now());
         return new ResponseEntity<>(errorDTO, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<ErrorDTO> handleForbidden(Exception e){
-        ErrorDTO errorDTO = new ErrorDTO();
-        errorDTO.setStatus(HttpStatus.FORBIDDEN);
-        errorDTO.setMessage(e.getMessage());
-        errorDTO.setDateTime(LocalDateTime.now());
+        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.FORBIDDEN, e.getMessage(), LocalDateTime.now());
         return new ResponseEntity<>(errorDTO, HttpStatus.FORBIDDEN);
     }
 
-    //todo is this max size ok for pictures?
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ErrorDTO> handleSizeExceeded(Exception e){
-        ErrorDTO errorDTO = new ErrorDTO();
-        errorDTO.setStatus(HttpStatus.PAYLOAD_TOO_LARGE);
-        errorDTO.setMessage("The file you are trying to upload exceeds our file size limit");
-        errorDTO.setDateTime(LocalDateTime.now());
+        String message = "The file you are trying to upload exceeds our file size limit";
+        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.PAYLOAD_TOO_LARGE, message, LocalDateTime.now());
         return new ResponseEntity<>(errorDTO, HttpStatus.PAYLOAD_TOO_LARGE);
     }
 
     @ExceptionHandler(UnsupportedMediaTypeException.class)
     public ResponseEntity<ErrorDTO> handleUnsupportedMedia(Exception e){
-        ErrorDTO errorDTO = new ErrorDTO();
-        errorDTO.setStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
-        errorDTO.setMessage(e.getMessage());
-        errorDTO.setDateTime(LocalDateTime.now());
+        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.UNSUPPORTED_MEDIA_TYPE, e.getMessage(), LocalDateTime.now());
         return new ResponseEntity<>(errorDTO, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDTO> handleOtherExceptions(Exception e){
-        ErrorDTO errorDTO = new ErrorDTO();
-        errorDTO.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-        errorDTO.setMessage("Unexpected error: " + e.getMessage());
+        String message = "An unexpected error occurred";
+        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.INTERNAL_SERVER_ERROR, message, LocalDateTime.now());
         e.printStackTrace();
-        errorDTO.setDateTime(LocalDateTime.now());
         return new ResponseEntity<>(errorDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

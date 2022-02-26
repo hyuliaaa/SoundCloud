@@ -2,6 +2,7 @@ package com.example.soundcloud.controller;
 
 import com.example.soundcloud.event.OnRegistrationCompleteEvent;
 import com.example.soundcloud.exceptions.ForbiddenException;
+import com.example.soundcloud.model.DTO.MessageDTO;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
 import com.example.soundcloud.model.DTO.user.*;
@@ -81,7 +82,7 @@ public class UserController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @PutMapping("/edit")
+    @PutMapping("/users")
     public ResponseEntity<UserResponseDTO> editUser(@Valid @RequestBody UserEditRequestDTO dto, HttpSession session){
         Long id = (long) session.getAttribute(USER_ID);
         UserResponseDTO responseDTO = userService.edit(id, dto);
@@ -103,18 +104,22 @@ public class UserController {
         return userService.uploadPicture(file, (long) session.getAttribute(USER_ID));
     }
 
-
-
-    @DeleteMapping("users/{id}")
+    @DeleteMapping("/users/{id}")
     public ResponseEntity<UserResponseDTO> deleteUser(@PathVariable long id){
         UserResponseDTO user = userService.getById(id);
         return ResponseEntity.ok(userService.deleteUser(user));
     }
 
     @PostMapping("/users/{id}/follow")
-    public ResponseEntity<String> followUser(@PathVariable long id, HttpSession session) {
-        userService.follow((long) session.getAttribute(USER_ID), id);
-        return ResponseEntity.ok("Followed successfully");
+    public ResponseEntity<UserWithFollowersDTO> followUser(@PathVariable long id, HttpSession session) {
+        UserWithFollowersDTO responseDTO = userService.follow((long) session.getAttribute(USER_ID), id);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @DeleteMapping("/users/{id}/follow")
+    public ResponseEntity<UserWithFollowersDTO> unfollowUser(@PathVariable long id, HttpSession session) {
+        UserWithFollowersDTO responseDTO = userService.unfollow((long) session.getAttribute(USER_ID), id);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping("/users/{id}/following")
@@ -142,13 +147,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getLikedPlaylists(id));
     }
 
-    //todo what to return?
     @PutMapping("/reset_password")
-    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordDTO dto, HttpSession session){
+    public ResponseEntity<MessageDTO> resetPassword(@Valid @RequestBody ResetPasswordDTO dto, HttpSession session){
         if (session.getAttribute(LOGGED) != null){
             throw new ForbiddenException("You cannot reset your email when you are logged in");
         }
         userService.resetPassword(dto);
-        return ResponseEntity.ok("A temporary password has been sent to your email address");
+        return ResponseEntity.ok(new MessageDTO("A temporary password has been sent to your email address"));
     }
 }

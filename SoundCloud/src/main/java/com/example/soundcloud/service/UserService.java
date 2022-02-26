@@ -160,7 +160,7 @@ public class UserService {
     }
 
 
-    public void follow(long id, long otherUser) {
+    public UserWithFollowersDTO follow(long id, long otherUser) {
         if (id == otherUser){
             throw new BadRequestException("You cannot follow yourself");
         }
@@ -171,6 +171,26 @@ public class UserService {
             throw new BadRequestException("You are already following this user");
         }
         userRepository.save(user);
+        UserWithFollowersDTO responseDTO = modelMapper.map(other, UserWithFollowersDTO.class);
+        responseDTO.setNumberOfFollowers(other.getFollowers().size());
+        return responseDTO;
+    }
+
+    public UserWithFollowersDTO unfollow(long id, long otherUser) {
+        if (id == otherUser){
+            throw new BadRequestException("You cannot follow yourself");
+        }
+
+        User user = utils.getUserById(id);
+        User other = utils.getUserById(otherUser);
+        if (!user.getFollowing().contains(other)){
+            throw new BadRequestException("You are not following this user");
+        }
+        user.getFollowing().remove(other);
+        userRepository.save(user);
+        UserWithFollowersDTO responseDTO = modelMapper.map(other, UserWithFollowersDTO.class);
+        responseDTO.setNumberOfFollowers(other.getFollowers().size());
+        return responseDTO;
     }
 
     public Set<UserResponseDTO> getFollowing(long id) {

@@ -103,7 +103,7 @@ public class CommentService {
         return modelMapper.map(comment, CommentResponseDTO.class);
     }
 
-    public void delete(long userId, long commentId) {
+    public CommentResponseDTO delete(long userId, long commentId) {
         User user = utils.getUserById(userId);
         Comment comment = utils.getCommentById(commentId);
 
@@ -112,5 +112,6 @@ public class CommentService {
         }
 
         commentRepository.delete(comment);
+        return modelMapper.map(comment, CommentResponseDTO.class);
     }
 }

@@ -24,7 +24,7 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @PostMapping("/comment")
+    @PostMapping("/comments")
     ResponseEntity<CommentResponseDTO> addComment(@Valid @RequestBody CommentAddRequestDTO requestDTO, HttpSession session){
         CommentResponseDTO responseDTO = commentService.addComment((long)session.getAttribute(USER_ID), requestDTO);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
@@ -47,16 +47,16 @@ public class CommentController {
         return ResponseEntity.ok(dto);
     }
 
-    @PutMapping("/comments/{id}/edit")
+    @PutMapping("/comments/{id}")
     ResponseEntity<CommentResponseDTO> edit(@Valid @RequestBody CommentEditRequestDTO requestDTO, @PathVariable(name = "id") long commentId, HttpSession session){
         CommentResponseDTO responseDTO = commentService.edit((long) session.getAttribute(USER_ID), commentId, requestDTO);
         return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping("/comments/{id}")
-    ResponseEntity<String> delete(@PathVariable(name = "id") long commentId, HttpSession session){
-        commentService.delete((long) session.getAttribute(USER_ID), commentId);
-        return ResponseEntity.ok("Comment was deleted");
+    ResponseEntity<CommentResponseDTO> delete(@PathVariable(name = "id") long commentId, HttpSession session){
+        CommentResponseDTO responseDTO = commentService.delete((long) session.getAttribute(USER_ID), commentId);
+        return ResponseEntity.ok(responseDTO);
     }
 
 }

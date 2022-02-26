@@ -1,5 +1,6 @@
 package com.example.soundcloud.controller;
 
+import com.example.soundcloud.model.DTO.MessageDTO;
 import com.example.soundcloud.model.DTO.playlist.*;
 
 import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
@@ -82,18 +83,15 @@ public class PlaylistController {
 //    }
 
     @DeleteMapping("playlists/{id}")
-    ResponseEntity<String> delete(@PathVariable(name = "id") long id, HttpSession session) {
+    ResponseEntity<MessageDTO> delete(@PathVariable(name = "id") long id, HttpSession session) {
         playlistService.delete(id,(long) session.getAttribute(USER_ID));
-        return ResponseEntity.ok("Playlist was deleted");
+        return ResponseEntity.ok(new MessageDTO("Playlist was deleted"));
     }
 
     @PutMapping("playlists/edit")
     public PlaylistResponseDTO edit(@Valid @RequestBody PlaylistEditDTO dto, HttpSession session){
         return playlistService.edit((long) session.getAttribute(USER_ID), dto);
     }
-
-
-
 
 }
 
