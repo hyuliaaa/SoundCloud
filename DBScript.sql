@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`descriptions` (
   `content` TEXT NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 27
+AUTO_INCREMENT = 29
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -43,9 +43,10 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`users` (
   `profile_picture_url` VARCHAR(200) NULL DEFAULT NULL,
   `enabled` TINYINT NOT NULL DEFAULT '0',
   `last_active` DATETIME NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 10
+AUTO_INCREMENT = 12
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -68,13 +69,13 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`songs` (
   CONSTRAINT `songs_descriptions_fk`
     FOREIGN KEY (`description_id`)
     REFERENCES `soundcloud`.`descriptions` (`id`)
-    ON DELETE CASCADE,
+    ON DELETE RESTRICT,
   CONSTRAINT `songs_users_fk`
     FOREIGN KEY (`owner_id`)
     REFERENCES `soundcloud`.`users` (`id`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 19
+AUTO_INCREMENT = 20
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -132,10 +133,12 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`descriptions_have_tags` (
   INDEX `dht_tags_fk_idx` (`tag_id` ASC) VISIBLE,
   CONSTRAINT `dht_descriptions_fk`
     FOREIGN KEY (`description_id`)
-    REFERENCES `soundcloud`.`descriptions` (`id`),
+    REFERENCES `soundcloud`.`descriptions` (`id`)
+    ON DELETE CASCADE,
   CONSTRAINT `dht_tags_fk`
     FOREIGN KEY (`tag_id`)
-    REFERENCES `soundcloud`.`tags` (`id`))
+    REFERENCES `soundcloud`.`tags` (`id`)
+    ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -157,10 +160,12 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`playlists` (
   INDEX `playlists_descriptions_fk_idx` (`description_id` ASC) VISIBLE,
   CONSTRAINT `playlists_descriptions_fk`
     FOREIGN KEY (`description_id`)
-    REFERENCES `soundcloud`.`descriptions` (`id`),
+    REFERENCES `soundcloud`.`descriptions` (`id`)
+    ON DELETE CASCADE,
   CONSTRAINT `playlists_users_fk`
     FOREIGN KEY (`owner_id`)
-    REFERENCES `soundcloud`.`users` (`id`))
+    REFERENCES `soundcloud`.`users` (`id`)
+    ON DELETE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 8
 DEFAULT CHARACTER SET = utf8mb3;
@@ -172,14 +177,16 @@ DEFAULT CHARACTER SET = utf8mb3;
 CREATE TABLE IF NOT EXISTS `soundcloud`.`playlists_have_songs` (
   `playlist_id` INT NOT NULL,
   `song_id` INT NOT NULL,
-  PRIMARY KEY (`playlist_id`, `song_id`),
   INDEX `phs_songs_fk_idx` (`song_id` ASC) VISIBLE,
+  INDEX `phs_playlists_fk_idx` (`playlist_id` ASC) VISIBLE,
   CONSTRAINT `phs_playlists_fk`
     FOREIGN KEY (`playlist_id`)
-    REFERENCES `soundcloud`.`playlists` (`id`),
+    REFERENCES `soundcloud`.`playlists` (`id`)
+    ON DELETE CASCADE,
   CONSTRAINT `phs_songs_fk`
     FOREIGN KEY (`song_id`)
-    REFERENCES `soundcloud`.`songs` (`id`))
+    REFERENCES `soundcloud`.`songs` (`id`)
+    ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -194,10 +201,12 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`users_follow_users` (
   INDEX `ufu_follower_fk_idx` (`follower_id` ASC) VISIBLE,
   CONSTRAINT `ufu_followed_fk`
     FOREIGN KEY (`followed_id`)
-    REFERENCES `soundcloud`.`users` (`id`),
+    REFERENCES `soundcloud`.`users` (`id`)
+    ON DELETE CASCADE,
   CONSTRAINT `ufu_follower_fk`
     FOREIGN KEY (`follower_id`)
-    REFERENCES `soundcloud`.`users` (`id`))
+    REFERENCES `soundcloud`.`users` (`id`)
+    ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -212,10 +221,12 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`users_like_comments` (
   INDEX `ulc_comments_fk_idx` (`comment_id` ASC) VISIBLE,
   CONSTRAINT `ulc_comments_fk`
     FOREIGN KEY (`comment_id`)
-    REFERENCES `soundcloud`.`comments` (`id`),
+    REFERENCES `soundcloud`.`comments` (`id`)
+    ON DELETE CASCADE,
   CONSTRAINT `ulc_users_fk`
     FOREIGN KEY (`user_id`)
-    REFERENCES `soundcloud`.`users` (`id`))
+    REFERENCES `soundcloud`.`users` (`id`)
+    ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -230,10 +241,12 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`users_like_playlists` (
   INDEX `ULK_playlists_fk_idx` (`playlist_id` ASC) VISIBLE,
   CONSTRAINT `ULK_playlists_fk`
     FOREIGN KEY (`playlist_id`)
-    REFERENCES `soundcloud`.`playlists` (`id`),
+    REFERENCES `soundcloud`.`playlists` (`id`)
+    ON DELETE CASCADE,
   CONSTRAINT `ULK_users_fk`
     FOREIGN KEY (`user_id`)
-    REFERENCES `soundcloud`.`users` (`id`))
+    REFERENCES `soundcloud`.`users` (`id`)
+    ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -248,10 +261,12 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`users_like_songs` (
   INDEX `uls_songs_fk_idx` (`song_id` ASC) VISIBLE,
   CONSTRAINT `uls_songs_fk`
     FOREIGN KEY (`song_id`)
-    REFERENCES `soundcloud`.`songs` (`id`),
+    REFERENCES `soundcloud`.`songs` (`id`)
+    ON DELETE CASCADE,
   CONSTRAINT `uls_users_fk`
     FOREIGN KEY (`user_id`)
-    REFERENCES `soundcloud`.`users` (`id`))
+    REFERENCES `soundcloud`.`users` (`id`)
+    ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -272,7 +287,7 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`verification_tokens` (
     REFERENCES `soundcloud`.`users` (`id`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 10
+AUTO_INCREMENT = 12
 DEFAULT CHARACTER SET = utf8mb3;
 
 
