@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`descriptions` (
   `content` TEXT NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 29
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`users` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 12
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`songs` (
     REFERENCES `soundcloud`.`users` (`id`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 20
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`comments` (
     REFERENCES `soundcloud`.`users` (`id`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 14
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`tags` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 10
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`playlists` (
     REFERENCES `soundcloud`.`users` (`id`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 8
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -287,7 +287,7 @@ CREATE TABLE IF NOT EXISTS `soundcloud`.`verification_tokens` (
     REFERENCES `soundcloud`.`users` (`id`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 12
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8mb3;
 
 
