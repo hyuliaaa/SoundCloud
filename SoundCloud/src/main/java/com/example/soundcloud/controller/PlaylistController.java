@@ -24,7 +24,7 @@ public class PlaylistController {
     private PlaylistService playlistService;
 
     @PostMapping("/create_playlist")
-    ResponseEntity<PlaylistResponseDTO> createPlaylist(@Valid @RequestBody PlaylistCreateRequestDTO createPlaylistDTO, HttpSession session){
+    ResponseEntity<PlaylistResponseDTO> createPlaylist(@RequestBody PlaylistCreateRequestDTO createPlaylistDTO, HttpSession session){
         long id = (long) session.getAttribute(USER_ID);
         return new ResponseEntity<>(playlistService.createPlaylist(id, createPlaylistDTO), HttpStatus.CREATED);
     }

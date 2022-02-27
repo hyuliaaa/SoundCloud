@@ -44,10 +44,10 @@ public class PlaylistService {
     @Autowired
     private Utils utils;
 
-    public PlaylistResponseDTO createPlaylist(long id, @Valid PlaylistCreateRequestDTO createPlaylistDTO) {
+    public PlaylistResponseDTO createPlaylist(long id, PlaylistCreateRequestDTO createPlaylistDTO) {
         PlaylistResponseDTO dto = new PlaylistResponseDTO();
-        Playlist playlist = new Playlist();
-        modelMapper.map(createPlaylistDTO,playlist);
+        Playlist playlist = modelMapper.map(createPlaylistDTO,Playlist.class);
+      //  playlist.setPublic(createPlaylistDTO.isPublic());
         playlist.setCreatedAt(LocalDateTime.now());
         playlist.setLastModified(LocalDateTime.now());
         playlist.setOwner(utils.getUserById(id));
@@ -88,7 +88,7 @@ public class PlaylistService {
         User user = utils.getUserById(userId);
         Playlist playlist = utils.getPlaylistById(playlistId);
 
-        if (!playlist.isPublic() && playlist.getOwner() != user)
+        if (!playlist.isPublic() && playlist.getOwner().getId() != userId)
             throw new BadRequestException("Playlist is private");
 
         if(user.getLikedPlaylists().contains(playlist)){
@@ -208,9 +208,13 @@ public class PlaylistService {
 
     public PlaylistWithSongsInfo getAllSongs(long playlistId, long userId) {
         Playlist playlist = utils.getPlaylistById(playlistId);
+        System.out.println("=========" + playlist.getId() +" "+playlist.getTitle());
+        System.out.println(playlist.isPublic());
         User user = utils.getUserById(userId);
-        if(!(playlist.isPublic()) && !(playlist.getOwner().equals(user))){
-            throw new NotFoundException("Playlist not found!");
+        if(!(playlist.isPublic())){
+            if(playlist.getOwner().getId()!=userId) {
+                throw new NotFoundException("Playlist not found!");
+            }
         }
 
         return modelMapper.map(playlist,PlaylistWithSongsInfo.class);

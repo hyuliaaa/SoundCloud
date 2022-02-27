@@ -1,6 +1,7 @@
 package com.example.soundcloud.model.DTO.playlist;
 
 import com.example.soundcloud.model.entities.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -17,4 +18,8 @@ public class PlaylistCreateRequestDTO {
     @Column
     private boolean isPublic;
 
+    @JsonProperty("isPublic")
+    public boolean isPublic() {
+        return isPublic;
+    }
 }
