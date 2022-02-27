@@ -366,6 +366,10 @@ public class SongService {
             throw new NotFoundException("No such song!");
         }
 
+        if (amazonS3.doesObjectExist(STORAGE_BUCKET_NAME, song.getSongUrl())){
+            amazonS3.deleteObject(STORAGE_BUCKET_NAME, song.getSongUrl());
+        }
+
         return modelMapper.map(song,SongResponseDTO.class);
 
     }
