@@ -63,6 +63,7 @@ public class PlaylistService {
         if(playlist.getOwner().getId() != ownerId){
             throw new BadRequestException("Not allowed to modify playlist pictures of other users!");
         }
+        Utils.validateImage(file);
         if(playlist.getCoverPhotoUrl()!=null){
             File playlistPicture = new File("playlist_pictures" + File.separator + playlist.getCoverPhotoUrl());
             if (playlistPicture.exists()) {

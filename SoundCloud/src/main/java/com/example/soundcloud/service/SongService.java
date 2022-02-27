@@ -117,14 +117,11 @@ public class SongService {
     @SneakyThrows
     private String uploadSongFile(MultipartFile file){
 
+        Utils.validateSong(file);
+
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         String name = System.nanoTime() + "." + extension;
         File f = new File("songs" + File.separator + name);
-
-//        String mimeType = Files.probeContentType(f.toPath());
-//        if (!mimeType.contains("audio" + File.separator)){
-//            throw new UnsupportedMediaTypeException("You must provide an audio file");
-//        }
 
         Files.copy(file.getInputStream(), Path.of(f.toURI()));
         return f.getName();
@@ -216,6 +213,7 @@ public class SongService {
         if(song.getOwner().getId() != id){
             throw new BadRequestException("Not allowed to modify songs of other users!");
         }
+        Utils.validateImage(file);
         if(song.getCoverPhotoUrl()!=null){
             File songPicture = new File("song_pictures" + File.separator + song.getCoverPhotoUrl());
             if (songPicture.exists()) {
@@ -228,11 +226,6 @@ public class SongService {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         String name = System.nanoTime() + "." + extension;
         File f = new File("song_pictures" + File.separator + name);
-
-//        String mimeType = Files.probeContentType(f.toPath());
-//        if (!mimeType.contains("image" + File.separator)){
-//            throw new UnsupportedMediaTypeException("You must provide an image file");
-//        }
 
         Files.copy(file.getInputStream(), Path.of(f.toURI()));
         song.setCoverPhotoUrl(name);

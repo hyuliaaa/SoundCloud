@@ -2,6 +2,7 @@ package com.example.soundcloud.util;
 
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.exceptions.NotFoundException;
+import com.example.soundcloud.exceptions.UnsupportedMediaTypeException;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
 import com.example.soundcloud.model.DTO.song.SongResponseDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
@@ -14,11 +15,16 @@ import com.example.soundcloud.model.repositories.CommentRepository;
 import com.example.soundcloud.model.repositories.PlaylistRepository;
 import com.example.soundcloud.model.repositories.SongRepository;
 import com.example.soundcloud.model.repositories.UserRepository;
+import lombok.SneakyThrows;
+import org.apache.tika.Tika;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.Multipart;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -152,5 +158,25 @@ public class Utils {
                 .collect(Collectors.toList());
         return new PageImpl<SongResponseDTO>(list.subList(start,end),pageable, list.size());
     }
+
+    @SneakyThrows
+    public static void validateImage(MultipartFile file){
+        Tika tika = new Tika();
+        String type = null;
+        type = tika.detect(file.getInputStream());
+        if(!type.contains("image")){
+            throw new UnsupportedMediaTypeException("You must provide an image file!");
+        }
+    }
+
+    @SneakyThrows
+    public static void validateSong(MultipartFile file){
+        Tika tika = new Tika();
+        String type = tika.detect(file.getInputStream());
+        if(!type.contains("audio")){
+            throw new UnsupportedMediaTypeException("You must provide an audio file!");
+        }
+    }
+
 
 }

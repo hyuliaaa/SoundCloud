@@ -146,6 +146,7 @@ public class UserService {
     @SneakyThrows
     public MessageDTO uploadPicture(MultipartFile file, long id) {
         User user = userRepository.getById(id);
+        Utils.validateImage(file);
         if(user.getProfilePictureUrl()!=null){
             File pictureFile = new File("profile_pictures" + File.separator + user.getProfilePictureUrl());
             if (pictureFile.exists()) {
