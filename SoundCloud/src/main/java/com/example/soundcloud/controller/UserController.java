@@ -4,7 +4,7 @@ import com.example.soundcloud.event.OnRegistrationCompleteEvent;
 import com.example.soundcloud.exceptions.ForbiddenException;
 import com.example.soundcloud.model.DTO.MessageDTO;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
-import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
+import com.example.soundcloud.model.DTO.song.SongResponseDTO;
 import com.example.soundcloud.model.DTO.user.*;
 import com.example.soundcloud.model.entities.User;
 import com.example.soundcloud.service.EmailService;
@@ -138,7 +138,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}/liked-songs/{offset}/{pageSize}")
-    public ResponseEntity<Page<SongWithoutUserDTO>> getLikedSongs(@PathVariable long id, @PathVariable int offset,@PathVariable int pageSize){
+    public ResponseEntity<Page<SongResponseDTO>> getLikedSongs(@PathVariable long id, @PathVariable int offset, @PathVariable int pageSize){
         return ResponseEntity.ok(userService.getLikedSongs(offset, pageSize, id));
     }
 

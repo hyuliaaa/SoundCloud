@@ -4,7 +4,7 @@ import com.example.soundcloud.model.DTO.MessageDTO;
 import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
-import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
+import com.example.soundcloud.model.DTO.song.SongResponseDTO;
 import com.example.soundcloud.service.SongService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class SongController {
     private SongService songService;
 
     @PostMapping(value = "/songs", consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
-    ResponseEntity<SongWithoutUserDTO> upload(@Valid @RequestParam("dto") String stringDto, @RequestParam("file") MultipartFile file, HttpSession session){
+    ResponseEntity<SongResponseDTO> upload(@Valid @RequestParam("dto") String stringDto, @RequestParam("file") MultipartFile file, HttpSession session){
         long id = (long) session.getAttribute(USER_ID);
         SongUploadRequestDTO dto = songService.toJson(stringDto);
         return new ResponseEntity<>(songService.upload(id, dto, file), HttpStatus.CREATED);
@@ -41,7 +41,7 @@ public class SongController {
     }
 
     @GetMapping("/users/{id}/songs")
-    ResponseEntity<Set<SongWithoutUserDTO>> getAllUploadedByUserId(@PathVariable long id, HttpSession session){
+    ResponseEntity<Set<SongResponseDTO>> getAllUploadedByUserId(@PathVariable long id, HttpSession session){
         return ResponseEntity.ok(songService.getAllUploaded((long) session.getAttribute(USER_ID), id));
     }
 
@@ -62,7 +62,7 @@ public class SongController {
     }
 
     @GetMapping("/songs/{title}")
-    public ResponseEntity<Set<SongWithoutUserDTO>> getSongByTitle(@PathVariable String title){
+    public ResponseEntity<Set<SongResponseDTO>> getSongByTitle(@PathVariable String title){
         return ResponseEntity.ok(songService.getByTitle(title));
     }
 
@@ -72,7 +72,7 @@ public class SongController {
     }
 
     @PutMapping("/songs")
-    public SongWithoutUserDTO edit(@Valid @RequestBody SongEditRequestDTO requestDTO, HttpSession session){
+    public SongResponseDTO edit(@Valid @RequestBody SongEditRequestDTO requestDTO, HttpSession session){
         return songService.edit((long) session.getAttribute(USER_ID), requestDTO);
     }
 

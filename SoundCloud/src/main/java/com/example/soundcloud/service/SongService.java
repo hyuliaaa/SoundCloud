@@ -14,7 +14,7 @@ import com.example.soundcloud.exceptions.UnsupportedMediaTypeException;
 import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
-import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
+import com.example.soundcloud.model.DTO.song.SongResponseDTO;
 import com.example.soundcloud.model.entities.*;
 import com.example.soundcloud.model.repositories.DescriptionRepository;
 import com.example.soundcloud.model.repositories.SongRepository;
@@ -77,7 +77,7 @@ public class SongService {
 
 
     @Transactional
-    public SongWithoutUserDTO upload(long id, SongUploadRequestDTO uploadDTO, MultipartFile file){
+    public SongResponseDTO upload(long id, SongUploadRequestDTO uploadDTO, MultipartFile file){
 
         Song song = modelMapper.map(uploadDTO, Song.class);
         song.setOwner(utils.getUserById(id));
@@ -92,7 +92,7 @@ public class SongService {
         songRepository.save(song);
         uploadToAWS(song);
 
-        return modelMapper.map(song, SongWithoutUserDTO.class);
+        return modelMapper.map(song, SongResponseDTO.class);
     }
 
     private void createTagsForDescription(Description description){
@@ -146,17 +146,17 @@ public class SongService {
         Upload upload = tm.upload(STORAGE_BUCKET_NAME, song.getSongUrl(), f);
     }
 
-    public Set<SongWithoutUserDTO> getAllUploaded (long id, long otherUserId){
+    public Set<SongResponseDTO> getAllUploaded (long id, long otherUserId){
 
-        Set<SongWithoutUserDTO> songs = utils.getUserById(id)
+        Set<SongResponseDTO> songs = utils.getUserById(otherUserId)
                 .getUploadedSongs().stream()
-                .map((song) -> modelMapper.map(song, SongWithoutUserDTO.class))
+                .map((song) -> modelMapper.map(song, SongResponseDTO.class))
                 .collect(Collectors.toSet());
 
         if (id != otherUserId)
-            songs = songs.stream().filter(SongWithoutUserDTO::isPublic).collect(Collectors.toSet());
+            songs = songs.stream().filter(SongResponseDTO::isPublic).collect(Collectors.toSet());
 
-        return songs.stream().sorted(Comparator.comparing(SongWithoutUserDTO::getUploadedAt))
+        return songs.stream().sorted(Comparator.comparing(SongResponseDTO::getUploadedAt))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
@@ -207,8 +207,8 @@ public class SongService {
         return dto;
     }
 
-    public Set<SongWithoutUserDTO> getByTitle(String title) {
-        Set <SongWithoutUserDTO> songs = utils.getSongByTitle(title);
+    public Set<SongResponseDTO> getByTitle(String title) {
+        Set <SongResponseDTO> songs = utils.getSongByTitle(title);
         return songs;
     }
 
@@ -234,7 +234,7 @@ public class SongService {
     }
 
     @Transactional
-    public SongWithoutUserDTO edit(long userId, SongEditRequestDTO requestDTO) {
+    public SongResponseDTO edit(long userId, SongEditRequestDTO requestDTO) {
         Song song = utils.getSongById(requestDTO.getId());
         if (song.getOwner().getId() != userId){
             throw new ForbiddenException("You cannot edit this song!");
@@ -257,7 +257,7 @@ public class SongService {
             song.setDescription(newDescription);
         }
         songRepository.save(song);
-        return modelMapper.map(song, SongWithoutUserDTO.class);
+        return modelMapper.map(song, SongResponseDTO.class);
     }
 
     @SneakyThrows

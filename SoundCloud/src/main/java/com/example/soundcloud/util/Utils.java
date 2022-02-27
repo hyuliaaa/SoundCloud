@@ -4,7 +4,7 @@ import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
-import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
+import com.example.soundcloud.model.DTO.song.SongResponseDTO;
 import com.example.soundcloud.model.DTO.user.UserResponseDTO;
 import com.example.soundcloud.model.entities.Comment;
 import com.example.soundcloud.model.entities.Playlist;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -77,10 +76,10 @@ public class Utils {
        return playlistRepository.findById(id).orElseThrow(() -> new NotFoundException("Playlist not found!"));
     }
 
-    public Set<SongWithoutUserDTO> getSongByTitle(String title){
+    public Set<SongResponseDTO> getSongByTitle(String title){
 
-        Set <SongWithoutUserDTO> songs = songRepository.findByTitleStartsWith(title)
-                .stream().map(song ->modelMapper.map(song,SongWithoutUserDTO.class))
+        Set <SongResponseDTO> songs = songRepository.findByTitleStartsWith(title)
+                .stream().map(song ->modelMapper.map(song, SongResponseDTO.class))
                 .collect(Collectors.toSet());
         if(songs.size()==0){
             throw new NotFoundException("No available songs with that name");
@@ -137,7 +136,7 @@ public class Utils {
                                             .collect(Collectors.toList()));
     }
 
-    public Page<SongWithoutUserDTO> getLikedSongs(int offset, int pageSize, long id) {
+    public Page<SongResponseDTO> getLikedSongs(int offset, int pageSize, long id) {
         User user = getUserById(id);
         Set<Song> songs = user.getLikedSongs();
         if(user.getLikedSongs().size() == 0){
@@ -148,10 +147,10 @@ public class Utils {
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), songs.size());
 
-        List <SongWithoutUserDTO> list = songs.stream().
-                map(song -> modelMapper.map(song,SongWithoutUserDTO.class))
+        List <SongResponseDTO> list = songs.stream().
+                map(song -> modelMapper.map(song, SongResponseDTO.class))
                 .collect(Collectors.toList());
-        return new PageImpl<SongWithoutUserDTO>(list.subList(start,end),pageable, list.size());
+        return new PageImpl<SongResponseDTO>(list.subList(start,end),pageable, list.size());
     }
 //
 //    public List<PlaylistWithLikesDTO> findByOrderByLikesDesc()

@@ -2,9 +2,8 @@ package com.example.soundcloud.service;
 
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
-import com.example.soundcloud.model.DTO.song.SongWithoutUserDTO;
+import com.example.soundcloud.model.DTO.song.SongResponseDTO;
 import com.example.soundcloud.model.DTO.user.*;
-import com.example.soundcloud.model.entities.Song;
 import com.example.soundcloud.model.entities.User;
 import com.example.soundcloud.model.entities.VerificationToken;
 import com.example.soundcloud.model.repositories.UserRepository;
@@ -203,7 +202,7 @@ public class UserService {
         return user.getFollowers().stream().map((user1 -> modelMapper.map(user1, UserResponseDTO.class))).collect(Collectors.toSet());
     }
 
-    public Page<SongWithoutUserDTO> getLikedSongs(int offset, int pageSize,long id) {
+    public Page<SongResponseDTO> getLikedSongs(int offset, int pageSize, long id) {
         User user = utils.getUserById(id);
         return utils.getLikedSongs(offset,pageSize,id);
 
