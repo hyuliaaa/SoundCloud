@@ -3,6 +3,10 @@ package com.example.soundcloud.model.repositories;
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.model.DTO.song.SongSearchDTO;
 import com.example.soundcloud.model.DTO.song.SongResponseDTO;
+import com.example.soundcloud.model.DTO.user.ShortUserDTO;
+import com.example.soundcloud.model.entities.User;
+import com.example.soundcloud.util.Utils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -18,13 +22,22 @@ import java.util.List;
 public class SearchDAO {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private Utils utils;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     private final int RESULTS_PER_PAGE = 2;
 
     public List<SongResponseDTO> searchSongs(SongSearchDTO searchDTO, int pageNumber){
+        if(pageNumber < 1){
+            throw new BadRequestException("No such page!");
+        }
         if(searchDTO.getTitle() == null || searchDTO.getTitle().isBlank()){
-            throw new BadRequestException("No results");
+            throw new BadRequestException("No results!");
         }
 
         String title = searchDTO.getTitle();
@@ -63,8 +76,10 @@ public class SearchDAO {
     }
 
     private SongResponseDTO songBuilder(ResultSet resultSet) throws SQLException {
+        User user = utils.getUserById(resultSet.getInt("owner_id"));
         return SongResponseDTO.builder().id(resultSet.getLong("id"))
                 .title(resultSet.getString("title"))
+                .owner(modelMapper.map(user, ShortUserDTO.class))
                 .uploadedAt(resultSet.getTimestamp("uploaded_at").toLocalDateTime())
                 .views(resultSet.getInt("views"))
                 .songUrl(resultSet.getString("song_url"))

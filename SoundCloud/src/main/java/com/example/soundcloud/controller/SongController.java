@@ -2,9 +2,7 @@ package com.example.soundcloud.controller;
 
 import com.example.soundcloud.model.DTO.MessageDTO;
 import com.example.soundcloud.model.DTO.song.*;
-import com.example.soundcloud.model.DTO.user.UserResponseDTO;
 import com.example.soundcloud.service.SongService;
-import javazoom.jl.decoder.JavaLayerException;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,11 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Set;
 
