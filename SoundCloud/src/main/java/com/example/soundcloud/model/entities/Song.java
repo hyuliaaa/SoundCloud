@@ -56,7 +56,6 @@ public class Song {
     private Description description;
 
 
-    @ManyToMany
-    @JoinColumn(name="song_id")
+    @ManyToMany(mappedBy ="songs" )
     private Set<Playlist> playlists;
 }

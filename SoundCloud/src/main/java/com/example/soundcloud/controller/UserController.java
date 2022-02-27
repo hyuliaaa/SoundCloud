@@ -100,14 +100,15 @@ public class UserController {
     }
 
     @PostMapping("/users/upload")
-    public String uploadProfileImage(@RequestParam(name = "picture") MultipartFile file, HttpSession session){
+    public MessageDTO uploadProfileImage(@RequestParam(name = "picture") MultipartFile file, HttpSession session){
         return userService.uploadPicture(file, (long) session.getAttribute(USER_ID));
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<UserResponseDTO> deleteUser(@PathVariable long id){
-        UserResponseDTO user = userService.getById(id);
-        return ResponseEntity.ok(userService.deleteUser(user));
+    public ResponseEntity<UserResponseDTO> deleteUser(@PathVariable long id,HttpSession session){
+        UserResponseDTO userResponseDTO = userService.deleteUser(id,(long) session.getAttribute(USER_ID));
+        session.invalidate();
+        return ResponseEntity.ok(userResponseDTO);
     }
 
     @PostMapping("/users/{id}/follow")

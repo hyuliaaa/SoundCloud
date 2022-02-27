@@ -1,5 +1,6 @@
 package com.example.soundcloud.controller;
 
+import com.example.soundcloud.model.DTO.MessageDTO;
 import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongResponseDTO;
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
@@ -67,7 +68,7 @@ public class SongController {
     }
 
     @PostMapping("/songs/{song_id}/upload-song-image")
-    public String uploadSongImage(@PathVariable("song_id") long songId, @RequestParam(name = "picture") MultipartFile file, HttpSession session){
+    public MessageDTO uploadSongImage(@PathVariable("song_id") long songId, @RequestParam(name = "picture") MultipartFile file, HttpSession session){
         return songService.uploadSongPicture(songId,file, (long) session.getAttribute(USER_ID));
     }
 
@@ -90,4 +91,15 @@ public class SongController {
         return ResponseEntity.ok("Song was stopped");
     }
 
+    @GetMapping(value = "/songs/download/{id}", produces = "audio/mpeg")
+    ResponseEntity<byte[]> downloadFromS3(@PathVariable("id") long songId, HttpSession session){
+        long userId = (long) session.getAttribute(USER_ID);
+        return ResponseEntity.ok(songService.downloadFromS3(userId, songId));
+    }
+
+    @DeleteMapping("/songs/{id}")
+    ResponseEntity <SongResponseDTO> deleteSong(@PathVariable long id, HttpSession session){
+        SongResponseDTO dto = songService.deleteSong(id,(long) session.getAttribute(USER_ID));
+        return ResponseEntity.ok(dto);
+    }
 }

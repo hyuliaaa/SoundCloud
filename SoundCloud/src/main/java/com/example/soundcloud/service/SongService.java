@@ -11,6 +11,7 @@ import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.exceptions.ForbiddenException;
 import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.exceptions.UnsupportedMediaTypeException;
+import com.example.soundcloud.model.DTO.MessageDTO;
 import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
@@ -123,10 +124,10 @@ public class SongService {
         String name = System.nanoTime() + "." + extension;
         File f = new File("songs" + File.separator + name);
 
-        String mimeType = Files.probeContentType(f.toPath());
-        if (!mimeType.contains("audio" + File.separator)){
-            throw new UnsupportedMediaTypeException("You must provide an audio file");
-        }
+//        String mimeType = Files.probeContentType(f.toPath());
+//        if (!mimeType.contains("audio" + File.separator)){
+//            throw new UnsupportedMediaTypeException("You must provide an audio file");
+//        }
 
         Files.copy(file.getInputStream(), Path.of(f.toURI()));
         return f.getName();
@@ -213,24 +214,33 @@ public class SongService {
     }
 
     @SneakyThrows
-    public String uploadSongPicture(long song_id,MultipartFile file, long id) {
+    public MessageDTO uploadSongPicture(long song_id,MultipartFile file, long id) {
         Song song = utils.getSongById(song_id);
         if(song.getOwner().getId() != id){
             throw new BadRequestException("Not allowed to modify songs of other users!");
+        }
+        if(song.getCoverPhotoUrl()!=null){
+            File songPicture = new File("song_pictures" + File.separator + song.getCoverPhotoUrl());
+            if (songPicture.exists()) {
+                songPicture.delete();
+            }
+            else {
+                throw new NotFoundException("No such song!");
+            }
         }
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         String name = System.nanoTime() + "." + extension;
         File f = new File("song_pictures" + File.separator + name);
 
-        String mimeType = Files.probeContentType(f.toPath());
-        if (!mimeType.contains("image" + File.separator)){
-            throw new UnsupportedMediaTypeException("You must provide an image file");
-        }
+//        String mimeType = Files.probeContentType(f.toPath());
+//        if (!mimeType.contains("image" + File.separator)){
+//            throw new UnsupportedMediaTypeException("You must provide an image file");
+//        }
 
         Files.copy(file.getInputStream(), Path.of(f.toURI()));
         song.setCoverPhotoUrl(name);
         songRepository.save(song);
-        return f.getName();
+        return new MessageDTO(f.getName());
     }
 
     @Transactional
@@ -310,6 +320,8 @@ public class SongService {
             throw new NotFoundException("Song not found");
         }
 
+        incrementViews(song.getSongUrl());
+        songRepository.save(song);
         return downloadFile(song.getSongUrl());
     }
 
@@ -328,4 +340,36 @@ public class SongService {
     }
 
 
+    public void incrementViews(String filename) {
+        Song song = songRepository.findBySongUrl(filename).orElseThrow(() -> new NotFoundException("Song not found!"));
+        song.setViews(song.getViews() + 1);
+        songRepository.save(song);
+    }
+
+    @SneakyThrows
+    public SongResponseDTO deleteSong(long songId, long userId) {
+        User user = utils.getUserById(userId);
+        Song song = utils.getSongById(songId);
+
+        if(!song.getOwner().equals(user)){
+            throw new BadRequestException("You cannot delete other user's song!");
+        }
+        songRepository.delete(song);
+        File file = new File("songs" + File.separator + song.getSongUrl());
+        if (file.exists()) {
+             file.delete();
+            if(song.getCoverPhotoUrl()!=null) {
+                File songImage = new File("song_pictures" + File.separator + song.getCoverPhotoUrl());
+                if (songImage.exists()) {
+                    songImage.delete();
+                }
+            }
+        }
+        else {
+            throw new NotFoundException("No such song!");
+        }
+
+        return modelMapper.map(song,SongResponseDTO.class);
+
+    }
 }

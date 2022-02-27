@@ -1,7 +1,11 @@
 package com.example.soundcloud.controller;
 
 import com.example.soundcloud.exceptions.NotFoundException;
+import com.example.soundcloud.model.entities.Song;
+import com.example.soundcloud.service.SongService;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +16,9 @@ import java.nio.file.Files;
 
 @RestController
 public class FileController {
+
+    @Autowired
+    private SongService songService;
 
     @SneakyThrows
     @GetMapping("profile_pics/{filename}")
@@ -51,5 +58,6 @@ public class FileController {
             throw new NotFoundException("Song does not exist!");
         }
         Files.copy(f.toPath(),response.getOutputStream());
+        songService.incrementViews(filename);
     }
 }

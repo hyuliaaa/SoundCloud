@@ -2,6 +2,8 @@ package com.example.soundcloud.service;
 
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.exceptions.ForbiddenException;
+import com.example.soundcloud.exceptions.NotFoundException;
+import com.example.soundcloud.model.DTO.MessageDTO;
 import com.example.soundcloud.model.DTO.playlist.*;
 import com.example.soundcloud.model.entities.Playlist;
 import com.example.soundcloud.model.entities.Song;
@@ -56,10 +58,19 @@ public class PlaylistService {
     }
 
     @SneakyThrows
-    public String uploadPlaylistPicture(long playlistId,MultipartFile file, long ownerId) {
-        Playlist playlist = playlistRepository.getById(playlistId);
+    public MessageDTO uploadPlaylistPicture(long playlistId, MultipartFile file, long ownerId) {
+        Playlist playlist = utils.getPlaylistById(playlistId);
         if(playlist.getOwner().getId() != ownerId){
             throw new BadRequestException("Not allowed to modify playlist pictures of other users!");
+        }
+        if(playlist.getCoverPhotoUrl()!=null){
+            File playlistPicture = new File("playlist_pictures" + File.separator + playlist.getCoverPhotoUrl());
+            if (playlistPicture.exists()) {
+                playlistPicture.delete();
+            }
+            else {
+                throw new NotFoundException("No playlist picture!");
+            }
         }
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         String name = System.nanoTime() + "." + extension;
@@ -68,7 +79,7 @@ public class PlaylistService {
         playlist.setCoverPhotoUrl(name);
         playlist.setLastModified(LocalDateTime.now());
         playlistRepository.save(playlist);
-        return f.getName();
+        return new MessageDTO(f.getName());
     }
 
     public PlaylistWithLikesDTO like(long playlistId, long userId) {
@@ -159,8 +170,17 @@ public class PlaylistService {
     public void delete(long playlistId, long userId) {
         User user = utils.getUserById(userId);
         Playlist playlist =utils.getPlaylistById(playlistId);
-        if(!user.getLikedPlaylists().contains(playlist)){
-            throw new ForbiddenException("This playlist is not in the user liked playlists!");
+        if(!playlist.getOwner().equals(user)){
+            throw new ForbiddenException("You cannot delete other user's playlists!");
+        }
+        if(playlist.getCoverPhotoUrl()!=null){
+            File playlistPicture = new File("playlist_pictures" + File.separator + playlist.getCoverPhotoUrl());
+            if (playlistPicture.exists()) {
+                playlistPicture.delete();
+            }
+            else {
+                throw new NotFoundException("No playlist picture!");
+            }
         }
         playlistRepository.delete(playlist);
     }
@@ -185,4 +205,13 @@ public class PlaylistService {
         return playlistResponseDTOS;
     }
 
+    public PlaylistWithSongsInfo getAllSongs(long playlistId, long userId) {
+        Playlist playlist = utils.getPlaylistById(playlistId);
+        User user = utils.getUserById(userId);
+        if(!(playlist.isPublic()) && !(playlist.getOwner().equals(user))){
+            throw new NotFoundException("Playlist not found!");
+        }
+
+        return modelMapper.map(playlist,PlaylistWithSongsInfo.class);
+    }
 }

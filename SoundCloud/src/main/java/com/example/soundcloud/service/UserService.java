@@ -1,6 +1,8 @@
 package com.example.soundcloud.service;
 
 import com.example.soundcloud.exceptions.BadRequestException;
+import com.example.soundcloud.exceptions.NotFoundException;
+import com.example.soundcloud.model.DTO.MessageDTO;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
 import com.example.soundcloud.model.DTO.song.SongResponseDTO;
 import com.example.soundcloud.model.DTO.user.*;
@@ -142,20 +144,42 @@ public class UserService {
     }
 
     @SneakyThrows
-    public String uploadPicture(MultipartFile file, long id) {
+    public MessageDTO uploadPicture(MultipartFile file, long id) {
         User user = userRepository.getById(id);
+        if(user.getProfilePictureUrl()!=null){
+            File pictureFile = new File("profile_pictures" + File.separator + user.getProfilePictureUrl());
+            if (pictureFile.exists()) {
+                pictureFile.delete();
+            }
+            else {
+                throw new NotFoundException("No such picture!");
+            }
+        }
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         String name = System.nanoTime() + "." + extension;
         File f = new File("profile_pictures" + File.separator + name);
         Files.copy(file.getInputStream(), Path.of(f.toURI()));
         user.setProfilePictureUrl(name);
         userRepository.save(user);
-        return f.getName();
+        return new MessageDTO(f.getName());
+
+
     }
-    public UserResponseDTO deleteUser(UserResponseDTO user) {
-        User u = modelMapper.map(user,User.class);
-        userRepository.delete(u);
-        return user;
+    public UserResponseDTO deleteUser(long userId, long userSessionId) {
+        if(userId!=userSessionId){
+            throw new BadRequestException("You cannot delete other user's profiles");
+        }
+        User user = utils.getUserById(userId);
+        userRepository.delete(user);
+        if(user.getProfilePictureUrl()!=null) {
+            File file = new File("profile_pictures" + File.separator + user.getProfilePictureUrl());
+            if (file.exists()) {
+                file.delete();
+            } else {
+                throw new NotFoundException("No profile picture uploaded!");
+            }
+        }
+        return modelMapper.map(user,UserResponseDTO.class);
     }
 
 

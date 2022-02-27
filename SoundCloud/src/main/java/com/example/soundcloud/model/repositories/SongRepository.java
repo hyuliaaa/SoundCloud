@@ -7,12 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
 public interface SongRepository extends JpaRepository<Song, Long> {
 
-    Set<Song> findByTitleStartsWith(String title);
-    List<Song> findByOrderByLikesAsc();
+    Set <Song> findByTitleStartsWith(String title);
+    List <Song> findByOrderByLikesAsc();
+    Optional <Song> findBySongUrl(String songUrl);
 
 }

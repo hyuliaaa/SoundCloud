@@ -30,7 +30,7 @@ public class PlaylistController {
     }
 
     @PostMapping("/playlists/{playlist_id}/upload-playlist-image")
-    public String uploadSongImage(@PathVariable("playlist_id") long playlistId, @RequestParam(name = "picture") MultipartFile file, HttpSession session){
+    public MessageDTO uploadPlaylistImage(@PathVariable("playlist_id") long playlistId, @RequestParam(name = "picture") MultipartFile file, HttpSession session){
         return playlistService.uploadPlaylistPicture(playlistId,file, (long) session.getAttribute(USER_ID));
     }
 
@@ -54,9 +54,14 @@ public class PlaylistController {
         return ResponseEntity.ok(playlistService.deleteSong(playlistId,songId,(long)session.getAttribute(USER_ID)));
     }
 
-    @GetMapping("playlists/{id}")
+    @GetMapping("/playlists/{id}")
     ResponseEntity<PlaylistResponseDTO> getByid(@PathVariable long id, HttpSession session){
         return ResponseEntity.ok(playlistService.getByid(id,(long)session.getAttribute(USER_ID)));
+    }
+
+    @GetMapping("/playlists/{id}/songs")
+    ResponseEntity<PlaylistWithSongsInfo> getAllSongs(@PathVariable long id, HttpSession session){
+        return ResponseEntity.ok(playlistService.getAllSongs(id,(long)session.getAttribute(USER_ID)));
     }
 
     @GetMapping("/playlists/find-by-title/{title}")
