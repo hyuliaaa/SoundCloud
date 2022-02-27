@@ -20,11 +20,16 @@ Backend functionality of SoundCloud -  application for uploading songs, creating
 - edit song
 - sort songs by certain criteria
 - upload song picture
+- delete song
 ### Playlist
 - create playlist
 - like/unlike playlist
 - add/delete song to/from playlist
+- edit playlist
+- get liked playlist for user
+- get playlist by id
 - find playlist by title
+- delete playlist
 ### Comments
 - post comment
 - like/unlike comment
@@ -34,13 +39,14 @@ Backend functionality of SoundCloud -  application for uploading songs, creating
 ## Used technologies
 - Java 17
 - Spring Boot
-- Spring Rest
+- Spring MVC
 - Maven
-- Hibernat
-- JPA
+- Hibernate
+- Spring DataJPA
 - MySQL
 - BCrypt
 - Lombock
+- ModelMapper
 - IDE: IntelliJ
 - Postman
 - Git
