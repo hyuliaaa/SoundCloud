@@ -2,11 +2,15 @@ package com.example.soundcloud.model.DTO.song;
 
 import com.example.soundcloud.model.DTO.user.ShortUserDTO;
 import com.example.soundcloud.model.DTO.user.UserResponseDTO;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SongResponseDTO {
 
     private long id;

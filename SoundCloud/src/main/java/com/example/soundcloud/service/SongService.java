@@ -12,16 +12,10 @@ import com.example.soundcloud.exceptions.ForbiddenException;
 import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.exceptions.UnsupportedMediaTypeException;
 import com.example.soundcloud.model.DTO.MessageDTO;
-import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
-import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
-import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
-import com.example.soundcloud.model.DTO.song.SongResponseDTO;
+import com.example.soundcloud.model.DTO.song.*;
 import com.example.soundcloud.model.DTO.user.UserResponseDTO;
 import com.example.soundcloud.model.entities.*;
-import com.example.soundcloud.model.repositories.DescriptionRepository;
-import com.example.soundcloud.model.repositories.SongRepository;
-import com.example.soundcloud.model.repositories.TagRepository;
-import com.example.soundcloud.model.repositories.UserRepository;
+import com.example.soundcloud.model.repositories.*;
 import com.example.soundcloud.util.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
@@ -55,6 +49,9 @@ public class SongService {
 
     @Autowired
     private SongRepository songRepository;
+
+    @Autowired
+    private SearchDAO searchDAO;
 
     @Autowired
     private UserRepository userRepository;
@@ -371,5 +368,9 @@ public class SongService {
 
         return modelMapper.map(song,SongResponseDTO.class);
 
+    }
+
+    public List<SongResponseDTO> searchSongs(SongSearchDTO searchDTO, int pageNumber) {
+        return searchDAO.searchSongs(searchDTO, pageNumber);
     }
 }

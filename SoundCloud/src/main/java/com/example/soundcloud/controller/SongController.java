@@ -1,10 +1,7 @@
 package com.example.soundcloud.controller;
 
 import com.example.soundcloud.model.DTO.MessageDTO;
-import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
-import com.example.soundcloud.model.DTO.song.SongResponseDTO;
-import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
-import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
+import com.example.soundcloud.model.DTO.song.*;
 import com.example.soundcloud.model.DTO.user.UserResponseDTO;
 import com.example.soundcloud.service.SongService;
 import javazoom.jl.decoder.JavaLayerException;
@@ -101,5 +98,11 @@ public class SongController {
     ResponseEntity <SongResponseDTO> deleteSong(@PathVariable long id, HttpSession session){
         SongResponseDTO dto = songService.deleteSong(id,(long) session.getAttribute(USER_ID));
         return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/songs/search/{page}")
+    ResponseEntity<List<SongResponseDTO>> searchSongs(@RequestBody SongSearchDTO searchDTO, @PathVariable(name = "page") int pageNumber){
+        List<SongResponseDTO> responseDTOS = songService.searchSongs(searchDTO, pageNumber);
+        return ResponseEntity.ok(responseDTOS);
     }
 }

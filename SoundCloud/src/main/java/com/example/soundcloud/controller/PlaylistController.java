@@ -85,6 +85,5 @@ public class PlaylistController {
     public PlaylistResponseDTO edit(@Valid @RequestBody PlaylistEditDTO dto, HttpSession session){
         return playlistService.edit((long) session.getAttribute(USER_ID), dto);
     }
-
 }
 
