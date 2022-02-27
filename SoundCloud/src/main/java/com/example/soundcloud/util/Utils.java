@@ -3,8 +3,8 @@ package com.example.soundcloud.util;
 import com.example.soundcloud.exceptions.BadRequestException;
 import com.example.soundcloud.exceptions.NotFoundException;
 import com.example.soundcloud.model.DTO.playlist.PlaylistResponseDTO;
-import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
 import com.example.soundcloud.model.DTO.song.SongResponseDTO;
+import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
 import com.example.soundcloud.model.DTO.user.UserResponseDTO;
 import com.example.soundcloud.model.entities.Comment;
 import com.example.soundcloud.model.entities.Playlist;
@@ -152,36 +152,5 @@ public class Utils {
                 .collect(Collectors.toList());
         return new PageImpl<SongResponseDTO>(list.subList(start,end),pageable, list.size());
     }
-//
-//    public List<PlaylistWithLikesDTO> findByOrderByLikesDesc()
-//    {
-//        List<Playlist> playlists = playlistRepository.findByOrderByLikesDesc();
-//        if(playlists.size()==0){
-//            throw new NotFoundException("No available playlists!");
-//        }
-//        List <PlaylistWithLikesDTO> playlistDTO = new ArrayList<>();
-//        PlaylistWithLikesDTO dto = new PlaylistWithLikesDTO();
-//        for (Playlist playlist : playlists) {
-//            modelMapper.map(playlist,dto);
-//            dto.setNumberOfLikes(playlist.getLikes().size());
-//            playlistDTO.add(dto);
-//        }
-//        return playlistDTO;
-//    }
-//
-//    public List<PlaylistWithLikesDTO> findByOrderByLikesAsc()
-//    {
-//        List<Playlist> playlists = playlistRepository.findByOrdOrderByLikesAsc();
-//        if(playlists.size()==0){
-//            throw new NotFoundException("No available playlists!");
-//        }
-//        List <PlaylistWithLikesDTO> playlistDTO = new ArrayList<>();
-//        PlaylistWithLikesDTO dto = new PlaylistWithLikesDTO();
-//        for (Playlist playlist : playlists) {
-//            modelMapper.map(playlist,dto);
-//            dto.setNumberOfLikes(playlist.getLikes().size());
-//            playlistDTO.add(dto);
-//        }
-//        return playlistDTO;
-//    }
+
 }

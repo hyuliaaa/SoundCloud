@@ -13,8 +13,5 @@ import java.util.Set;
 public interface PlaylistRepository extends JpaRepository<Playlist,Long> {
 
     Set<Playlist> findByTitleStartsWith(String title);
-//    List<Playlist> findByOrderByLikesDesc();
-//    List<Playlist> findByOrdOrderByLikesAsc();
-
 
 }

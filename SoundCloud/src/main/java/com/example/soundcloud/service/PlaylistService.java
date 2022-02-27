@@ -171,7 +171,6 @@ public class PlaylistService {
             throw new ForbiddenException("You cannot edit this playlist!");
         }
 
-        //todo check for descriptions
         playlist.setTitle(dto.getTitle());
         playlist.setPublic(dto.getIsPublic());
         playlist.setLastModified(LocalDateTime.now());
@@ -186,14 +185,4 @@ public class PlaylistService {
         return playlistResponseDTOS;
     }
 
-
-//    public List<PlaylistWithLikesDTO> orderByLikesAsc() {
-//        List<PlaylistWithLikesDTO> playlists = utils.findByOrderByLikesAsc();
-//        return playlists;
-//    }
-//
-//    public List<PlaylistWithLikesDTO> orderByLikesDesc() {
-//        List<PlaylistWithLikesDTO> playlists = utils.findByOrderByLikesDesc();
-//        return playlists;
-//    }
 }

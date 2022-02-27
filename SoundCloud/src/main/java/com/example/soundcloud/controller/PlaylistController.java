@@ -69,17 +69,6 @@ public class PlaylistController {
         return ResponseEntity.ok(playlistService.getAllUserLikedPlaylists((long) session.getAttribute(USER_ID)));
     }
 
-//    //http://localhost:9090/playlists/order-by-likes/?id=acs
-//    @GetMapping("/playlists/order-by-likes/")
-//    public ResponseEntity<List<PlaylistWithLikesDTO>> getPlaylistByLikes(@RequestParam String id){
-//        if(id.equals("asc")){
-//            return ResponseEntity.ok(playlistService.orderByLikesAsc());
-//        }
-//
-//        //todo think where this should be in if and else
-//        //if wrong request param is given
-//            return ResponseEntity.ok(playlistService.orderByLikesDesc());
-//    }
 
     @DeleteMapping("playlists/{id}")
     ResponseEntity<MessageDTO> delete(@PathVariable(name = "id") long id, HttpSession session) {

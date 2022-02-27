@@ -206,7 +206,6 @@ public class UserService {
         User user = utils.getUserById(id);
         return utils.getLikedSongs(offset,pageSize,id);
 
-//        return user.getLikedSongs().stream().map((song -> modelMapper.map(song, SongWithoutUserDTO.class))).collect(Collectors.toSet());
     }
 
     public void createVerificationToken(User user, String token) {

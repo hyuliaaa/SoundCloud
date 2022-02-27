@@ -15,6 +15,7 @@ import com.example.soundcloud.model.DTO.song.SongEditRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongUploadRequestDTO;
 import com.example.soundcloud.model.DTO.song.SongWithLikesDTO;
 import com.example.soundcloud.model.DTO.song.SongResponseDTO;
+import com.example.soundcloud.model.DTO.user.UserResponseDTO;
 import com.example.soundcloud.model.entities.*;
 import com.example.soundcloud.model.repositories.DescriptionRepository;
 import com.example.soundcloud.model.repositories.SongRepository;
@@ -122,7 +123,6 @@ public class SongService {
         String name = System.nanoTime() + "." + extension;
         File f = new File("songs" + File.separator + name);
 
-        //todo
         String mimeType = Files.probeContentType(f.toPath());
         if (!mimeType.contains("audio" + File.separator)){
             throw new UnsupportedMediaTypeException("You must provide an audio file");
@@ -327,15 +327,5 @@ public class SongService {
         }
     }
 
-
-//    public void delete(long songId, long userId) {
-//        User user = utils.getUserById(userId);
-//        Song song = utils.getSongById(songId);
-//
-//        if (!(song.getOwner().equals(user))){
-//            throw new ForbiddenException("You cannot delete this song!");
-//        }
-//        songRepository.delete(song);
-//    }
 
 }
